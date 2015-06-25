@@ -39,6 +39,8 @@ public class SaplingDespawnGrowth
 		oakBiomes.add(BiomeGenBase.extremeHillsEdge.biomeID) ;
 		oakBiomes.add(BiomeGenBase.extremeHillsPlus.biomeID) ;
 		oakBiomes.add(BiomeGenBase.icePlains.biomeID); 
+		oakBiomes.add(BiomeGenBase.roofedForest.biomeID);
+		oakBiomes.add(BiomeGenBase.getBiome(157).biomeID); // Roofed Forest M 
 		
 		acaciaBiomes.add(BiomeGenBase.savanna.biomeID);
 		acaciaBiomes.add(BiomeGenBase.savannaPlateau.biomeID);
@@ -69,6 +71,8 @@ public class SaplingDespawnGrowth
 		birchBiomes.add(BiomeGenBase.forest.biomeID);
 		birchBiomes.add(BiomeGenBase.forestHills.biomeID);
 		birchBiomes.add(BiomeGenBase.getBiome(132).biomeID);//Flower Forest;
+		birchBiomes.add(BiomeGenBase.roofedForest.biomeID);
+		birchBiomes.add(BiomeGenBase.getBiome(157).biomeID); // Roofed Forest M 
  
 		darkoakBiomes.add(BiomeGenBase.roofedForest.biomeID);
 		darkoakBiomes.add(BiomeGenBase.getBiome(157).biomeID); // Roofed Forest M 
