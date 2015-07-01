@@ -47,7 +47,12 @@ public class ModSaplings
 	  	 
 		String category = "sapling_biome_map";
 
-		String oakCSV = config.get(category,"oak",  "4, 18, 132, 39, 166, 167, 21, 23, 151, 149, 22, 6, 134, 3, 20, 34, 12, 29, 157", "These biomes permit oak saplings to grow").getString();
+		
+		config.addCustomCategoryComment(category, 
+				"A list of biome IDs that each sapling is allowed to grow in.  ");
+		
+		
+		String oakCSV = config.get(category,"oak",  "4, 18, 132, 39, 166, 167, 21, 23, 151, 149, 22, 6, 134, 3, 20, 34, 12, 29, 157").getString();
 		SaplingDespawnGrowth.oakBiomes = csvToInt(oakCSV);
 		
 		String acaciaCSV = config.get(category, "acacia",  "35, 36, 38, 163, 164").getString();
