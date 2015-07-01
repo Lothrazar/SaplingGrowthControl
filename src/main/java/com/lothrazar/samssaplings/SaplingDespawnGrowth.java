@@ -19,7 +19,9 @@ public class SaplingDespawnGrowth
 	public static List<Integer> jungleBiomes = new ArrayList<Integer>();
 	public static List<Integer> darkoakBiomes = new ArrayList<Integer>();
 	public static List<Integer> acaciaBiomes = new ArrayList<Integer>();
-	
+
+	public static boolean drop_on_failed_growth;
+	public static boolean plantDespawningSaplings;
 	public SaplingDespawnGrowth()
 	{
 		/*
@@ -146,6 +148,7 @@ public class SaplingDespawnGrowth
 		}  */
 	}
 
+	
 	public static final int sapling_oak = 0;
 	public static final int sapling_spruce = 1;
 	public static final int sapling_birch = 2;
@@ -201,8 +204,11 @@ public class SaplingDespawnGrowth
 				 
 				//overwrite the sapling. - we could set to Air first, but dont see much reason to
 				event.world.setBlockState(event.pos, Blocks.deadbush.getDefaultState());
+				if(drop_on_failed_growth)
+				{
+					ModSaplings.dropItemStackInWorld(event.world, event.pos, new ItemStack(Blocks.sapling,1,tree_type));
+				}
 				
-				ModSaplings.dropItemStackInWorld(event.world, event.pos, new ItemStack(Blocks.sapling,1,tree_type));
 			}  
 		}//else a tree grew that was added by some mod
 	}
@@ -210,11 +216,10 @@ public class SaplingDespawnGrowth
 	@SubscribeEvent
 	public void onItemExpireEvent(ItemExpireEvent event)
 	{  
-		 if(ModSaplings.plantDespawningSaplings == false) {return;}
+		 if(plantDespawningSaplings == false) {return;}
 		 
 		 ItemStack is = event.entityItem.getEntityItem();
 		 if(is == null ) {return;}//has not happened in the wild, yet
-		 
 		 
 		 Block blockhere = event.entity.worldObj.getBlockState(event.entityItem.getPosition()).getBlock(); 
 		 Block blockdown = event.entity.worldObj.getBlockState(event.entityItem.getPosition().down()).getBlock();

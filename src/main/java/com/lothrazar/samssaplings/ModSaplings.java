@@ -1,7 +1,10 @@
 package com.lothrazar.samssaplings;
 
 import java.util.ArrayList; 
+
+import org.apache.logging.log4j.Level;
 import org.apache.logging.log4j.Logger;     
+
 import net.minecraft.block.Block;
 import net.minecraft.entity.item.EntityItem;
 import net.minecraft.item.Item;
@@ -20,44 +23,14 @@ import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
 public class ModSaplings
 {	
 	public static final String MODID = "samssaplings";
-	public static final String TEXTURE_LOCATION = MODID + ":";
+	//public static final String TEXTURE_LOCATION = MODID + ":";
 
 	@Instance(value = MODID)
 	public static ModSaplings instance;	
 
 	public static Logger logger; 
 	
-	public static boolean plantDespawningSaplings;
- 
-
-	public static ArrayList<Integer> oak_biomes;
-
-	private ArrayList<Integer> csvToInt(String csv)
-	{
-		//does not check validity of biome ids
-		ArrayList<Integer> bi = new ArrayList<Integer>();
-		
-		String[] list = csv.split(",");
-		
-		int biome;
-		
-		for(String s_id : list)
-		{
-			try{
-				biome = Integer.parseInt(s_id.trim());
-				
-				bi.add(biome);
-			}
-			catch(Exception e)
-			{
-				System.out.println("invalid biome id from config file "+s_id);
-			}
-		}
-		
-		
-		return bi;
-	}
-	
+  
 	@EventHandler
 	public void onPreInit(FMLPreInitializationEvent event)
 	{ 
@@ -66,11 +39,14 @@ public class ModSaplings
 		Configuration config = new Configuration(event.getSuggestedConfigurationFile());
 		config.load();
 	
-	  	plantDespawningSaplings = config.getBoolean("sapling_plant_despawn",MODID, true,
+		SaplingDespawnGrowth.plantDespawningSaplings = config.getBoolean("sapling_plant_despawn",MODID, true,
     			"When a sapling (or mushroom) despawns while sitting on grass or dirt, it will instead attempt to plant itself.");
  
+	  	SaplingDespawnGrowth.drop_on_failed_growth = config.getBoolean("drop_on_failed_growth",MODID, true,
+    			"When a sapling fails to grow and turns to a dead bush, if this is true than the sapling item will also drop on the ground.");
+	  	 
 		String category = "sapling_biome_map";
-		
+
 		String oakCSV = config.get(category,"oak",  "4, 18, 132, 39, 166, 167, 21, 23, 151, 149, 22, 6, 134, 3, 20, 34, 12, 29, 157", "These biomes permit oak saplings to grow").getString();
 		SaplingDespawnGrowth.oakBiomes = csvToInt(oakCSV);
 		
@@ -103,6 +79,31 @@ public class ModSaplings
     		MinecraftForge.TERRAIN_GEN_BUS.register(h);
     		MinecraftForge.ORE_GEN_BUS.register(h); 
      	} 
+	}
+
+	private ArrayList<Integer> csvToInt(String csv)
+	{
+		//does not check validity of biome ids
+		ArrayList<Integer> bi = new ArrayList<Integer>();
+		
+		String[] list = csv.split(",");
+		
+		int biome;
+		
+		for(String s_id : list)
+		{
+			try{
+				biome = Integer.parseInt(s_id.trim());
+				
+				bi.add(biome);
+			}
+			catch(Exception e)
+			{
+				logger.log(Level.WARN, "Invalid biome id from config file, must be integer: "+s_id);
+			}
+		}
+		
+		return bi;
 	}
 	
 	public static EntityItem dropItemStackInWorld(World worldObj, BlockPos pos, Block block)
