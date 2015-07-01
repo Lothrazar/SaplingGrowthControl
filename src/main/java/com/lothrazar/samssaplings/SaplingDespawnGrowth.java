@@ -13,15 +13,16 @@ import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 
 public class SaplingDespawnGrowth
 {  
-	public List<Integer> oakBiomes = new ArrayList<Integer>();
-	public List<Integer> spruceBiomes = new ArrayList<Integer>();
-	public List<Integer> birchBiomes = new ArrayList<Integer>();
-	public List<Integer> jungleBiomes = new ArrayList<Integer>();
-	public List<Integer> darkoakBiomes = new ArrayList<Integer>();
-	public List<Integer> acaciaBiomes = new ArrayList<Integer>();
+	public static List<Integer> oakBiomes = new ArrayList<Integer>();
+	public static List<Integer> spruceBiomes = new ArrayList<Integer>();
+	public static List<Integer> birchBiomes = new ArrayList<Integer>();
+	public static List<Integer> jungleBiomes = new ArrayList<Integer>();
+	public static List<Integer> darkoakBiomes = new ArrayList<Integer>();
+	public static List<Integer> acaciaBiomes = new ArrayList<Integer>();
 	
 	public SaplingDespawnGrowth()
 	{
+		/*
 		oakBiomes.add(BiomeGenBase.forest.biomeID);
 		oakBiomes.add(BiomeGenBase.forestHills.biomeID);
 		oakBiomes.add(132);  //Flower Forest
@@ -42,12 +43,14 @@ public class SaplingDespawnGrowth
 		oakBiomes.add(BiomeGenBase.roofedForest.biomeID);
 		oakBiomes.add(BiomeGenBase.getBiome(157).biomeID); // Roofed Forest M 
 		
+
 		acaciaBiomes.add(BiomeGenBase.savanna.biomeID);
 		acaciaBiomes.add(BiomeGenBase.savannaPlateau.biomeID);
 		acaciaBiomes.add(BiomeGenBase.mesaPlateau_F.biomeID);
 		acaciaBiomes.add(BiomeGenBase.getBiome(163).biomeID); // Savanna M
 		acaciaBiomes.add(BiomeGenBase.getBiome(164).biomeID);  // Savanna Plateau M
-	  
+
+	
 		spruceBiomes.add(BiomeGenBase.taiga.biomeID);
 		spruceBiomes.add(BiomeGenBase.taigaHills.biomeID);
 		spruceBiomes.add(BiomeGenBase.megaTaiga.biomeID);
@@ -73,16 +76,32 @@ public class SaplingDespawnGrowth
 		birchBiomes.add(BiomeGenBase.getBiome(132).biomeID);//Flower Forest;
 		birchBiomes.add(BiomeGenBase.roofedForest.biomeID);
 		birchBiomes.add(BiomeGenBase.getBiome(157).biomeID); // Roofed Forest M 
- 
+
 		darkoakBiomes.add(BiomeGenBase.roofedForest.biomeID);
 		darkoakBiomes.add(BiomeGenBase.getBiome(157).biomeID); // Roofed Forest M 
-		
+
 		jungleBiomes.add(BiomeGenBase.jungle.biomeID);
 		jungleBiomes.add(BiomeGenBase.jungleEdge.biomeID);
 		jungleBiomes.add(BiomeGenBase.jungleHills.biomeID);
 		jungleBiomes.add(BiomeGenBase.getBiome(149).biomeID);//jungle edge M
 		jungleBiomes.add(BiomeGenBase.getBiome(151).biomeID);//jungle M
 
+		
+
+		System.out.println("reference: darkoakBiomes");
+		System.out.println(darkoakBiomes.toString());
+		
+		System.out.println("reference: oakBiomes");
+		System.out.println(oakBiomes.toString());//4, 18, 132, 39, 166, 167, 21, 23, 151, 149, 22, 6, 134, 3, 20, 34, 12, 29, 157]
+		
+		System.out.println("reference: acaciaBiomes");
+		System.out.println(acaciaBiomes.toString());
+		System.out.println("reference: spruceBiomes");
+		System.out.println(spruceBiomes.toString());
+		System.out.println("reference: birchBiomes");
+		System.out.println(birchBiomes.toString());
+		System.out.println("reference: jungleBiomes");
+		System.out.println(jungleBiomes.toString());*/
 		//no saplings for:
 		//frozen river 
 		//ice plains spikes 
@@ -105,7 +124,7 @@ public class SaplingDespawnGrowth
 		//ocean
 		//deepocean
 		//frozen ocean(10N  
-		 
+		 /*
 		if(ModSaplings.saplingAllNether)
 		{
 			acaciaBiomes.add(BiomeGenBase.hell.biomeID);
@@ -124,7 +143,7 @@ public class SaplingDespawnGrowth
 			spruceBiomes.add(BiomeGenBase.sky.biomeID);
 			darkoakBiomes.add(BiomeGenBase.sky.biomeID);
 			jungleBiomes.add(BiomeGenBase.sky.biomeID);
-		}  
+		}  */
 	}
 
 	public static final int sapling_oak = 0;
@@ -136,8 +155,6 @@ public class SaplingDespawnGrowth
 	@SubscribeEvent
 	public void onSaplingGrowTreeEvent(SaplingGrowTreeEvent event)
 	{  
-		if(ModSaplings.saplingGrowthRestricted == false) {return;}
-		
 		Block b = event.world.getBlockState(event.pos).getBlock();
 		
 		boolean treeAllowedToGrow = false;

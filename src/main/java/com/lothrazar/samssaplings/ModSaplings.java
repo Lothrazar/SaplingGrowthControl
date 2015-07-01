@@ -28,10 +28,36 @@ public class ModSaplings
 	public static Logger logger; 
 	
 	public static boolean plantDespawningSaplings;
-	public static boolean saplingGrowthRestricted;
-	public static boolean saplingAllNether;
-	public static boolean saplingAllEnd;
+ 
 
+	public static ArrayList<Integer> oak_biomes;
+
+	private ArrayList<Integer> csvToInt(String csv)
+	{
+		//does not check validity of biome ids
+		ArrayList<Integer> bi = new ArrayList<Integer>();
+		
+		String[] list = csv.split(",");
+		
+		int biome;
+		
+		for(String s_id : list)
+		{
+			try{
+				biome = Integer.parseInt(s_id.trim());
+				
+				bi.add(biome);
+			}
+			catch(Exception e)
+			{
+				System.out.println("invalid biome id from config file "+s_id);
+			}
+		}
+		
+		
+		return bi;
+	}
+	
 	@EventHandler
 	public void onPreInit(FMLPreInitializationEvent event)
 	{ 
@@ -42,16 +68,27 @@ public class ModSaplings
 	
 	  	plantDespawningSaplings = config.getBoolean("sapling_plant_despawn",MODID, true,
     			"When a sapling (or mushroom) despawns while sitting on grass or dirt, it will instead attempt to plant itself.");
-
-		saplingGrowthRestricted = config.getBoolean("sapling_biome_restricted",MODID, true,
-    			"Sapling growth is restricted to only their native biomes (for example, birch trees will not grow in roofed forests).");
-		 
-		saplingAllNether = config.getBoolean("sapling_nether",MODID, false,
-    			"If true, all saplings grow in the nether (ignoring sapling_biome_restricted).");
-		
-		saplingAllEnd = config.getBoolean("sapling_end",MODID, false,
-    			"If true, all saplings grow in the end (ignoring sapling_biome_restricted)");
  
+		String category = "sapling_biome_map";
+		
+		String oakCSV = config.get(category,"oak",  "4, 18, 132, 39, 166, 167, 21, 23, 151, 149, 22, 6, 134, 3, 20, 34, 12, 29, 157", "These biomes permit oak saplings to grow").getString();
+		SaplingDespawnGrowth.oakBiomes = csvToInt(oakCSV);
+		
+		String acaciaCSV = config.get(category, "acacia",  "35, 36, 38, 163, 164").getString();
+		SaplingDespawnGrowth.acaciaBiomes = csvToInt(acaciaCSV);
+
+		String spruceCSV = config.get(category, "spruce",  "5, 19, 32, 160, 161, 33, 30, 31, 158, 3, 20, 34, 21, 12, 13").getString();
+		SaplingDespawnGrowth.spruceBiomes = csvToInt(spruceCSV);
+
+		String birchCSV = config.get(category, "birch",  "27, 28, 155, 156, 4, 18, 132, 29, 157").getString();
+		SaplingDespawnGrowth.birchBiomes = csvToInt(birchCSV);
+
+		String darkCSV = config.get(category, "dark_oak",  "29, 157").getString();
+		SaplingDespawnGrowth.darkoakBiomes = csvToInt(darkCSV);
+
+		String jungleCSV = config.get(category, "jungle",  "21, 23, 22, 149, 151").getString();
+		SaplingDespawnGrowth.jungleBiomes = csvToInt(jungleCSV);
+		
 		if(config.hasChanged()) {config.save();}
 		
 		ArrayList<Object> handlers = new ArrayList<Object>();
