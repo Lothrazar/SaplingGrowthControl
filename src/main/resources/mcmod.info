@@ -4,7 +4,7 @@
     "modid": "samssaplings",
     "name": "Smarter Saplings",
     "description": "Saplings plant themselves when despawning.  Saplings only grow in their native biomes, otherwise the eventually turn to dead bushes.",
-    "version": "1.8-1.0.0",
+    "version": "1.8-1.1.0",
     "mcversion": "1.8",
     "url": "https://github.com/PrinceOfAmber/SamsPowerups/releases",
     "updateUrl": "",
