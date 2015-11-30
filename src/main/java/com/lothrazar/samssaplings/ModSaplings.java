@@ -1,8 +1,6 @@
 package com.lothrazar.samssaplings;
 
 import java.util.ArrayList; 
-
-import org.apache.logging.log4j.Level;
 import org.apache.logging.log4j.Logger;     
 
 import net.minecraftforge.common.MinecraftForge;
@@ -12,7 +10,7 @@ import net.minecraftforge.fml.common.Mod.EventHandler;
 import net.minecraftforge.fml.common.Mod.Instance;
 import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
   
-@Mod(modid = ModSaplings.MODID, useMetadata = true )  
+@Mod(modid = ModSaplings.MODID, useMetadata = true ,updateJSON = "https://raw.githubusercontent.com/LothrazarMinecraftMods/SaplingGrowthControl/master/update.json")  
 public class ModSaplings
 {	
 	public static final String MODID = "samssaplings";
@@ -41,5 +39,4 @@ public class ModSaplings
     		MinecraftForge.ORE_GEN_BUS.register(h); 
      	} 
 	}
-
 }
