@@ -2,10 +2,13 @@ package com.lothrazar.samssaplings;
 
 import java.util.ArrayList;
 import java.util.List;
+
 import net.minecraft.block.Block;
+import net.minecraft.entity.item.EntityItem;
 import net.minecraft.init.Blocks;
 import net.minecraft.item.ItemStack;
-import net.minecraft.world.biome.BiomeGenBase;
+import net.minecraft.util.BlockPos;
+import net.minecraft.world.World;
 import net.minecraftforge.event.entity.item.ItemExpireEvent;
 import net.minecraftforge.event.terraingen.SaplingGrowTreeEvent;
 import net.minecraftforge.fml.common.eventhandler.Event.Result;
@@ -22,11 +25,8 @@ public class SaplingDespawnGrowth
 
 	public static boolean drop_on_failed_growth;
 	public static boolean plantDespawningSaplings;
-	public SaplingDespawnGrowth()
-	{
-	}
+	public SaplingDespawnGrowth()	{	}
 
-	
 	private static final int sapling_oak = 0;
 	private static final int sapling_spruce = 1;
 	private static final int sapling_birch = 2;
@@ -85,9 +85,8 @@ public class SaplingDespawnGrowth
 				event.world.setBlockState(event.pos, Blocks.deadbush.getDefaultState());
 				if(drop_on_failed_growth)
 				{
-					ModSaplings.dropItemStackInWorld(event.world, event.pos, new ItemStack(Blocks.sapling,1,tree_type));
+					dropItemStackInWorld(event.world, event.pos, new ItemStack(Blocks.sapling,1,tree_type));
 				}
-				
 			}  
 		}//else a tree grew that was added by some mod
 	}
@@ -119,4 +118,13 @@ public class SaplingDespawnGrowth
 			 
 		 } 
 	} 
+
+	public static EntityItem dropItemStackInWorld(World worldObj, BlockPos pos, ItemStack stack)
+	{
+		EntityItem entityItem = new EntityItem(worldObj, pos.getX(),pos.getY(),pos.getZ(), stack); 
+
+ 		if(worldObj.isRemote==false)//do not spawn a second 'ghost' one on client side
+ 			worldObj.spawnEntityInWorld(entityItem);
+    	return entityItem;
+	}
 }
