@@ -6,8 +6,9 @@ import net.minecraft.block.Block;
 import net.minecraft.entity.item.EntityItem;
 import net.minecraft.init.Blocks;
 import net.minecraft.item.ItemStack;
-import net.minecraft.util.BlockPos;
+import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
+import net.minecraft.world.biome.BiomeGenBase;
 import net.minecraftforge.event.entity.item.ItemExpireEvent;
 import net.minecraftforge.event.terraingen.SaplingGrowTreeEvent;
 import net.minecraftforge.fml.common.eventhandler.Event.Result;
@@ -46,7 +47,8 @@ public class SaplingDespawnGrowth {
 		{
 			int meta = Blocks.sapling.getMetaFromState(event.world.getBlockState(event.pos));
 
-			int biomeID = event.world.getBiomeGenForCoords(event.pos).biomeID;
+			
+			int biomeID = BiomeGenBase.getIdForBiome(event.world.getBiomeGenForCoords(event.pos));// event.world.getBiomeGenForCoords(event.pos).biomeID;
 
 			int growth_data = 8;// 0-5 is the type, then it adds on a 0x8
 			// and we know that it is always maxed out at ready to grow 8 since

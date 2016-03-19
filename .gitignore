@@ -1,27 +1,22 @@
-bin/assets/
-run/
-bin/
-build/
-eclipse/
-logs/
-mods/
-config/
-saves/
-.settings/
-server.properties 
-*.properties 
-.gradle/
-screenshots/
-.metadata/
-.settings/
+# eclipse
+bin
+*.launch
+.settings
+.metadata
 .classpath
 .project
-gradlew
-options.txt
-usernamecache.json
-crash-reports/
-*.fdx
-*.fnm
-*.tis
-.recommenders/
-*.launch
+
+# idea
+out
+*.ipr
+*.iws
+*.iml
+.idea
+
+# gradle
+build
+.gradle
+
+# other
+eclipse
+run
