@@ -20,13 +20,14 @@ plugins {
     id "net.minecraftforge.gradle.forge" version "2.0.2"
 }
 */
-version = "1.9-1.1.0"
+version = "1.9-1.1.1"
 group= "com.lothrazar.samssaplings" 
 archivesBaseName = "RestrictedSaplings"
 
 
 minecraft {
-    version = "1.9-12.16.0.1766-1.9"
+    version = "1.9-12.16.0.1811-1.9"
+
     runDir = "run"
     
     // the mappings can be changed at any time, and must be in the following format.

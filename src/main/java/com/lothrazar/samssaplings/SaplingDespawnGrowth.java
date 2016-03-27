@@ -3,6 +3,7 @@ package com.lothrazar.samssaplings;
 import java.util.ArrayList;
 import java.util.List;
 import net.minecraft.block.Block;
+import net.minecraft.entity.Entity;
 import net.minecraft.entity.item.EntityItem;
 import net.minecraft.init.Blocks;
 import net.minecraft.item.ItemStack;
@@ -37,7 +38,9 @@ public class SaplingDespawnGrowth {
 
 	@SubscribeEvent
 	public void onSaplingGrowTreeEvent(SaplingGrowTreeEvent event) {
-		Block b = event.world.getBlockState(event.pos).getBlock();
+		World world = event.getWorld();
+		BlockPos pos = event.getPos();
+		Block b = world.getBlockState(pos).getBlock();
 
 		boolean treeAllowedToGrow = false;
 
@@ -45,10 +48,10 @@ public class SaplingDespawnGrowth {
 								// added by Mods, so not a vanilla tree, but
 								// throwing same event
 		{
-			int meta = Blocks.sapling.getMetaFromState(event.world.getBlockState(event.pos));
+			int meta = Blocks.sapling.getMetaFromState(world.getBlockState(pos));
 
 			
-			int biomeID = BiomeGenBase.getIdForBiome(event.world.getBiomeGenForCoords(event.pos));// event.world.getBiomeGenForCoords(event.pos).biomeID;
+			int biomeID = BiomeGenBase.getIdForBiome(world.getBiomeGenForCoords(pos));// event.world.getBiomeGenForCoords(event.pos).biomeID;
 
 			int growth_data = 8;// 0-5 is the type, then it adds on a 0x8
 			// and we know that it is always maxed out at ready to grow 8 since
@@ -87,9 +90,9 @@ public class SaplingDespawnGrowth {
 
 				// overwrite the sapling. - we could set to Air first, but dont
 				// see much reason to
-				event.world.setBlockState(event.pos, Blocks.deadbush.getDefaultState());
+				world.setBlockState(pos, Blocks.deadbush.getDefaultState());
 				if (drop_on_failed_growth) {
-					dropItemStackInWorld(event.world, event.pos, new ItemStack(Blocks.sapling, 1, tree_type));
+					dropItemStackInWorld(world, pos, new ItemStack(Blocks.sapling, 1, tree_type));
 				}
 			}
 		}// else a tree grew that was added by some mod
@@ -101,13 +104,15 @@ public class SaplingDespawnGrowth {
 			return;
 		}
 
-		ItemStack is = event.entityItem.getEntityItem();
+		EntityItem entityItem = event.getEntityItem();
+		Entity entity = event.getEntity();
+		ItemStack is = entityItem.getEntityItem();
 		if (is == null) {
 			return;
 		}// has not happened in the wild, yet
 
-		Block blockhere = event.entity.worldObj.getBlockState(event.entityItem.getPosition()).getBlock();
-		Block blockdown = event.entity.worldObj.getBlockState(event.entityItem.getPosition().down()).getBlock();
+		Block blockhere = entity.worldObj.getBlockState(entityItem.getPosition()).getBlock();
+		Block blockdown = entity.worldObj.getBlockState(entityItem.getPosition().down()).getBlock();
 
 		if (blockhere == Blocks.air && blockdown == Blocks.dirt || // includes
 																	// podzol
@@ -116,11 +121,11 @@ public class SaplingDespawnGrowth {
 			// plant the sapling, replacing the air and on top of dirt/plantable
 
 			if (Block.getBlockFromItem(is.getItem()) == Blocks.sapling)
-				event.entity.worldObj.setBlockState(event.entityItem.getPosition(), Blocks.sapling.getStateFromMeta(is.getItemDamage()));
+				entity.worldObj.setBlockState(entityItem.getPosition(), Blocks.sapling.getStateFromMeta(is.getItemDamage()));
 			else if (Block.getBlockFromItem(is.getItem()) == Blocks.red_mushroom)
-				event.entity.worldObj.setBlockState(event.entityItem.getPosition(), Blocks.red_mushroom.getDefaultState());
+				entity.worldObj.setBlockState(entityItem.getPosition(), Blocks.red_mushroom.getDefaultState());
 			else if (Block.getBlockFromItem(is.getItem()) == Blocks.brown_mushroom)
-				event.entity.worldObj.setBlockState(event.entityItem.getPosition(), Blocks.brown_mushroom.getDefaultState());
+				entity.worldObj.setBlockState(entityItem.getPosition(), Blocks.brown_mushroom.getDefaultState());
 
 		}
 	}
