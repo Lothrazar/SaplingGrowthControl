@@ -1,6 +1,8 @@
 package com.lothrazar.saplingcontrol;
 
+import java.util.Map;
 import net.minecraft.block.state.IBlockState;
+import net.minecraft.item.ItemStack;
 import net.minecraft.world.biome.Biome;
 import net.minecraftforge.common.config.Configuration;
 
@@ -19,9 +21,11 @@ public class ModConfig {
   public static void loadConfig(Configuration config) {
     config.load();
     //replanting different mod eh
+
     //	SaplingDespawnGrowth.chanceReplantDespawning = config.getBoolean("sapling_plant_despawn", ModSaplings.MODID, true, "When a sapling (or mushroom) despawns while sitting on grass or dirt, it will instead attempt to plant itself.");
     //SaplingDespawnGrowth.drop_on_failed_growth = config.getBoolean("drop_on_failed_growth", ModSaplings.MODID, true, "When a sapling fails to grow and turns to a dead bush, if this is true than the sapling item will also drop on the ground.");
     String category = ModSaplings.MODID;
+    //    config.getBoolean("increaseDropOnExpire", category, true, "doesthiswork"); 
  // @formatter:off
     String[] defaultValues = new String[]{
          "minecraft:forest#" + oak
@@ -71,13 +75,32 @@ public class ModConfig {
         + "No entry for a biome means no changes for that biome, this mod ignores it.  "
         + "Biome IDs must be unique, if the same one is listed twice it might probably take the second.  "
         + "For , 0=oak,1=spruce,2=birch,3=jungle,4=acacia,5=darkoak");
+    for (String s : mapListRaw) {
+      try {
+        // 
+        String[] temp = s.split("#");
+        String biomeId = temp[0];
+        String[] saplingCsv = temp[1].split(",");
+        for (String saplingString : saplingCsv) {
+          // 
+
+        }
+      }
+      catch (Throwable e) {
+        ModSaplings.logger.error("Error on config parse, format must be like "
+            + "'minecraft:beaches#minecraft:sapling:0,minecraft:sapling:1' . s = " + s, e);
+      }
+    }
     if (config.hasChanged()) {
       config.save();
     }
   }
 
+  static Map<String, ItemStack[]> biomeAllows;
+
   public static boolean isAllowedToGrow(Biome biome, IBlockState state) {
-    // TODO Auto-generated method stub
+    String biomeId = biome.getRegistryName().toString();
+
     return false;
   }
 

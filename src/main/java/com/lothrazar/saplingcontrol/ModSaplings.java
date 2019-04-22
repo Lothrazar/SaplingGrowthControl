@@ -24,9 +24,9 @@ public class ModSaplings {
   public void onPreInit(FMLPreInitializationEvent event) {
     logger = event.getModLog();
     ModConfig.loadConfig(new Configuration(event.getSuggestedConfigurationFile()));
-    MinecraftForge.EVENT_BUS.register(instance);
+    //    MinecraftForge.EVENT_BUS.register(instance);
+    MinecraftForge.TERRAIN_GEN_BUS.register(new GrowthHandler());
     MinecraftForge.EVENT_BUS.register(new GrowthHandler());
-    MinecraftForge.EVENT_BUS.register(new ExpireHandler());
   }
 
   public static EntityItem dropItemStackInWorld(World world, BlockPos pos, ItemStack stack) {
@@ -37,4 +37,5 @@ public class ModSaplings {
     }
     return entityItem;
   }
+
 }

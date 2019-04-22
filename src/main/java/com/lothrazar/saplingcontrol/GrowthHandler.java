@@ -1,7 +1,5 @@
 package com.lothrazar.saplingcontrol;
 
-import java.util.ArrayList;
-import java.util.List;
 import net.minecraft.block.Block;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.init.Blocks;
@@ -9,21 +7,12 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import net.minecraft.world.biome.Biome;
 import net.minecraftforge.event.terraingen.SaplingGrowTreeEvent;
+//import net.minecraftforge.event.world.BlockEvent.FarmlandTrampleEvent;
+//import net.minecraftforge.event.world.BlockEvent.CropGrowEvent;  
 import net.minecraftforge.fml.common.eventhandler.Event.Result;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 
 public class GrowthHandler {
-
-  public static List<String> oakBiomes = new ArrayList<String>();
-  public static List<String> spruceBiomes = new ArrayList<String>();
-  public static List<String> birchBiomes = new ArrayList<String>();
-  public static List<String> jungleBiomes = new ArrayList<String>();
-  public static List<String> darkoakBiomes = new ArrayList<String>();
-  public static List<String> acaciaBiomes = new ArrayList<String>();
-
-  public GrowthHandler() {
-	}
-
 
 	@SubscribeEvent
 	public void onSaplingGrowTreeEvent(SaplingGrowTreeEvent event) {
@@ -31,6 +20,8 @@ public class GrowthHandler {
 		BlockPos pos = event.getPos();
     IBlockState state = world.getBlockState(pos);
 		Block b = world.getBlockState(pos).getBlock();
+    ModSaplings.logger.error("Growth event " + pos + " " + b.getLocalizedName());
+    event.setCanceled(true);
 
 		boolean treeAllowedToGrow = false;
 
