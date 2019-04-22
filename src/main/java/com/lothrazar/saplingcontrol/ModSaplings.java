@@ -25,7 +25,9 @@ public class ModSaplings {
     logger = event.getModLog();
     ModConfig.loadConfig(new Configuration(event.getSuggestedConfigurationFile()));
 
-    MinecraftForge.TERRAIN_GEN_BUS.register(new GrowthHandler());
+    GrowthHandler grower = new GrowthHandler();
+    MinecraftForge.TERRAIN_GEN_BUS.register(grower);
+    MinecraftForge.EVENT_BUS.register(grower);
     MinecraftForge.EVENT_BUS.register(new BonemealHandler());
   }
 

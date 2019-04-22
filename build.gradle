@@ -52,15 +52,16 @@ repositories {
     maven { // JEI
         url "http://dvs1.progwml6.com/files/maven"
     }
-    maven { //Guide API
-        url "http://tehnut.info/maven/"
-    }
     maven {
         url = "http://minecraft.curseforge.com/api/maven/"
     }
+    maven {
+		url 'http://maven.blamejared.com'
+	}
 }
 dependencies {
    deobfCompile "mezz.jei:jei_${mc_version}:${jei_version}"
+ //  deobfCompile "CraftTweaker2:CraftTweaker2-MC1120-Main:${crt_version}"
 }
 
 processResources {

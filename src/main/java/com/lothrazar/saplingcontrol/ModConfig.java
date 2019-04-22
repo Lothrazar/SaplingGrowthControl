@@ -15,6 +15,13 @@ public class ModConfig {
   private static final String jungle = "minecraft:sapling:3";
   private static final String acacia = "minecraft:sapling:4";
   private static final String darkoak = "minecraft:sapling:5";
+  static String hillsSet = String.join(",", spruce, "minecraft:potatoes");
+  static String forestSet = String.join(",", oak, "minecraft:pumkpin_stem");
+  static String jungleSet = String.join(",", jungle, "minecraft:melon_stem", "minecraft:cocoa");
+  static String plainsSet = String.join(",", "minecraft:wheat", "minecraft:carrots");
+  static String desertSet = String.join(",", "minecraft:cactus");
+  static String riverBeachSet = String.join(",", "minecraft:reeds");
+  static String endSet = String.join(",", "minecraft:chorus_flower", "minecraft:chorus_plant");
   private static boolean logSpamEverything;
 
   public static boolean spam() {
@@ -24,26 +31,28 @@ public class ModConfig {
   public static void loadConfig(Configuration config) {
     config.load();
     String category = ModSaplings.MODID;
-    ModConfig.dropBlockOnDeny = config.getBoolean("dropBlockOnDeny", category, true, "If true, then whenever sapling growth "
-        + "is denied it tries to drop the plant as an item.");
-    disableBonemeal = config.getBoolean("disableBonemeal", category, false, "If true, all bonemeal use on any block, "
+    disableBonemeal = config.getBoolean("disableBonemeal", category, true, "If true, all bonemeal use on any block, "
         + "sapling or crop or anything, is completely blocked.  ");
     logSpamEverything = config.getBoolean("logSpamEverything", category, false, "If true, lots of events and data are logged.  Useful for debugging config values and building modpacks.  ");
+    ModConfig.dropBlockOnDeny = config.getBoolean("dropBlockOnDeny", category, true, "If true, then whenever sapling growth "
+        + "is denied it tries to drop the plant as an item.");
     // @formatter:off
     String[] defaultValues = new String[]{
-         "minecraft:forest#" + oak
-        ,"minecraft:forest_hills#" + oak
+         "minecraft:hell#"
+        ,"minecraft:sky#" + endSet 
+        ,"minecraft:forest#" + forestSet
+        ,"minecraft:forest_hills#" + forestSet
         ,"minecraft:swampland#"+ oak
-        ,"minecraft:smaller_extreme_hills#" + spruce
-        ,"minecraft:extreme_hills_with_trees#" + spruce
-        ,"minecraft:extreme_hills#" + spruce
+        ,"minecraft:smaller_extreme_hills#" + hillsSet
+        ,"minecraft:extreme_hills_with_trees#" + hillsSet
+        ,"minecraft:extreme_hills#" + hillsSet
         ,"minecraft:taiga#" + spruce
         ,"minecraft:taiga_hills#" + spruce
         ,"minecraft:redwood_taiga#" + String.join(",", spruce, darkoak)
         ,"minecraft:redwood_taiga_hills#" + String.join(",", spruce, darkoak)
-        ,"minecraft:jungle#"+ jungle
-        ,"minecraft:jungle_hills#"+ jungle
-        ,"minecraft:jungle_edge#"+ jungle
+        ,"minecraft:jungle#" + jungleSet
+        ,"minecraft:jungle_hills#" + jungleSet
+        ,"minecraft:jungle_edge#" + jungleSet
         ,"minecraft:birch_forest#" + birch
         ,"minecraft:birch_forest_hills#" + birch
         ,"minecraft:roofed_forest#" + darkoak
@@ -52,44 +61,50 @@ public class ModConfig {
         ,"minecraft:mesa#" + acacia
         ,"minecraft:mesa_rock#" + acacia
         ,"minecraft:mesa_clear_rock#" + acacia
-        ,"minecraft:ocean#"
-        ,"minecraft:plains#"
-        ,"minecraft:desert#"
-        ,"minecraft:desert_hills#" 
-        ,"minecraft:river#"
-        ,"minecraft:hell#"
-        ,"minecraft:sky#"
+        ,"minecraft:plains#" + plainsSet
+        ,"minecraft:desert#" + desertSet
+        ,"minecraft:desert_hills#" + desertSet
+        ,"minecraft:river#" + riverBeachSet
+        ,"minecraft:stone_beach#" + riverBeachSet
+        ,"minecraft:beaches#" + riverBeachSet
+        ,"minecraft:cold_beach#" 
+        ,"minecraft:frozen_river#"
         ,"minecraft:ice_flats#"
         ,"minecraft:ice_mountains#"
         ,"minecraft:mushroom_island#"
         ,"minecraft:mushroom_island_shore#"
-        ,"minecraft:taiga_cold#"
-        ,"minecraft:taiga_cold_hills#"
+        ,"minecraft:taiga_cold#" + String.join(",", "minecraft:beetroots")
+        ,"minecraft:taiga_cold_hills#" + String.join(",", "minecraft:beetroots")
+        ,"minecraft:ocean#"
         ,"minecraft:frozen_ocean#"
-        ,"minecraft:frozen_river#"
         ,"minecraft:deep_ocean#"
-        ,"minecraft:stone_beach#"
-        ,"minecraft:beaches#"
-        ,"minecraft:cold_beach#"
     }; 
     // @formatter:on
     String[] mapListRaw = config.getStringList("biome sapling map", category, defaultValues, "entry must be 'biome#list,of,sapling,item,ids'.  "
         + "An empty entry for a biome means all saplings disabled in this biome.  "
         + "No entry for a biome means no changes for that biome, this mod ignores it.  "
         + "Biome IDs must be unique, if the same one is listed twice it might probably take the second.  "
-        + "For , 0=oak,1=spruce,2=birch,3=jungle,4=acacia,5=darkoak");
+        + "Sapling meta example: 0=oak,1=spruce,2=birch,3=jungle,4=acacia,5=darkoak");
     for (String s : mapListRaw) {
       try {
-        // 
-        String[] temp = s.split("#");
-        String biomeId = temp[0];
-        biomeAllows.put(biomeId, new String[0]);
-        String[] saplingCsv = temp[1].split(",");
-        biomeAllows.put(biomeId, saplingCsv);
+      // 
+      String[] temp = s.split("#");
+      String biomeId = temp[0];
+
+      if (temp.length == 1) {
+        continue;
+      }
+      biomeAllows.put(biomeId, new String[0]);
+      String stringCsv = temp[1];
+      if (stringCsv == null || stringCsv.isEmpty()) {
+        continue;
+      }
+      String[] saplingCsv = stringCsv.split(",");
+      biomeAllows.put(biomeId, saplingCsv);
       }
       catch (Throwable e) {
-        ModSaplings.logger.error("Error on config parse, format must be like "
-            + "'minecraft:beaches#minecraft:sapling:0,minecraft:sapling:1' . s = " + s, e);
+        ModSaplings.logger.error(s + "  Error on config parse, format must be like "
+            + "'minecraft:beaches#minecraft:sapling:0,minecraft:sapling:1'");
       }
     }
     if (config.hasChanged()) {
@@ -102,8 +117,7 @@ public class ModConfig {
   private static boolean disableBonemeal;
 
   public static boolean isAllowedToGrow(Biome biome, IBlockState state) {
-    int meta = 0;
-    meta = state.getBlock().getMetaFromState(state);
+    int meta = state.getBlock().getMetaFromState(state);
     if (state.getBlock() == Blocks.SAPLING) {
       int growthData = 8;// 0-5 is the type, then it adds on a 0x8
       //now meta is tree type , ignoring grtowth 
@@ -112,23 +126,29 @@ public class ModConfig {
     String blockId = state.getBlock().getRegistryName().toString();
     String blockIdWithMeta = blockId + ":" + meta;
     String biomeId = biome.getRegistryName().toString();
+    ModSaplings.log(biomeId + "  containsKey  " + biomeAllows.containsKey(biomeId));
     if (biomeAllows.containsKey(biomeId) && biomeAllows.get(biomeId) != null) {
       String[] blocksAllowed = biomeAllows.get(biomeId);
-      ModSaplings.log(biomeId + " entry = " + blocksAllowed.length);
+      ModSaplings.log(biomeId + " blocksAllowed = " + blocksAllowed.length);
       for (String sapling : blocksAllowed) {
-        ModSaplings.log(" ? " + sapling + "<->" + blockIdWithMeta);
         if (blockId.equals(sapling) || blockIdWithMeta.equals(sapling)) {
-          ModSaplings.log("YES you can grow here  = " + sapling);
+          ModSaplings.log(blockIdWithMeta + " allowed at " + biomeId);
           return true;
         }
       }
     }
     else {
-      ModSaplings.log(biomeId + "  has NO ENTRIES, so allow everything");
+      ModSaplings.log(biomeId + "  has NO ENTRIES, so allow everything " + biomeAllows.get(biomeId));
       return true;
     }
-    ModSaplings.log("Not allowed ");
+    ModSaplings.log(blockIdWithMeta + " NOT allowed at " + biomeId);
     return false;
+  }
+
+  public static void dump() {
+    for (String val : ModConfig.biomeAllows.keySet()) {
+      System.out.println(val + " ?  " + ModConfig.biomeAllows.get(val).length);
+    }
   }
 
   public static boolean dropBlockOnGrowDeny() {
