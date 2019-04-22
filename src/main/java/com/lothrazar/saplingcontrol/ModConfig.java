@@ -1,8 +1,9 @@
 package com.lothrazar.saplingcontrol;
 
+import java.util.HashMap;
 import java.util.Map;
 import net.minecraft.block.state.IBlockState;
-import net.minecraft.item.ItemStack;
+import net.minecraft.init.Blocks;
 import net.minecraft.world.biome.Biome;
 import net.minecraftforge.common.config.Configuration;
 
@@ -15,18 +16,12 @@ public class ModConfig {
   private static final String acacia = "minecraft:sapling:4";
   private static final String darkoak = "minecraft:sapling:5";
 
-  public static boolean dropOnFailedGrowth;
-  public static boolean plantDespawningSaplings;
-
   public static void loadConfig(Configuration config) {
     config.load();
-    //replanting different mod eh
-
-    //	SaplingDespawnGrowth.chanceReplantDespawning = config.getBoolean("sapling_plant_despawn", ModSaplings.MODID, true, "When a sapling (or mushroom) despawns while sitting on grass or dirt, it will instead attempt to plant itself.");
-    //SaplingDespawnGrowth.drop_on_failed_growth = config.getBoolean("drop_on_failed_growth", ModSaplings.MODID, true, "When a sapling fails to grow and turns to a dead bush, if this is true than the sapling item will also drop on the ground.");
     String category = ModSaplings.MODID;
-    //    config.getBoolean("increaseDropOnExpire", category, true, "doesthiswork"); 
- // @formatter:off
+    ModConfig.dropBlockOnDeny = config.getBoolean("dropBlockOnDeny", category, true, "If true, then whenever sapling growth "
+        + "is denied it tries to drop the plant as an item.");
+    // @formatter:off
     String[] defaultValues = new String[]{
          "minecraft:forest#" + oak
         ,"minecraft:forest_hills#" + oak
@@ -80,11 +75,9 @@ public class ModConfig {
         // 
         String[] temp = s.split("#");
         String biomeId = temp[0];
+        biomeAllows.put(biomeId, new String[0]);
         String[] saplingCsv = temp[1].split(",");
-        for (String saplingString : saplingCsv) {
-          // 
-
-        }
+        biomeAllows.put(biomeId, saplingCsv);
       }
       catch (Throwable e) {
         ModSaplings.logger.error("Error on config parse, format must be like "
@@ -96,21 +89,43 @@ public class ModConfig {
     }
   }
 
-  static Map<String, ItemStack[]> biomeAllows;
+  static Map<String, String[]> biomeAllows = new HashMap<>();
+  private static boolean dropBlockOnDeny;
 
   public static boolean isAllowedToGrow(Biome biome, IBlockState state) {
+    int meta = 0;
+    meta = state.getBlock().getMetaFromState(state);
+    if (state.getBlock() == Blocks.SAPLING) {
+    int growthData = 8;// 0-5 is the type, then it adds on a 0x8
+      //now meta is tree type , ignoring grtowth 
+      meta = meta - growthData;
+    }
+    String blockId = state.getBlock().getRegistryName().toString();
+    String blockIdWithMeta = blockId + ":" + meta;
     String biomeId = biome.getRegistryName().toString();
+    if (biomeAllows.containsKey(biomeId) && biomeAllows.get(biomeId) != null) {
+      String[] blocksAllowed = biomeAllows.get(biomeId);
 
+      
+      ModSaplings.logger.info(biomeId + " entry = " + blocksAllowed.length);
+      for (String sapling : blocksAllowed) {
+        ModSaplings.logger.info(" ? " + sapling + "<->" + blockIdWithMeta);
+        if (blockId.equals(sapling) || blockIdWithMeta.equals(sapling)) {
+          ModSaplings.logger.info("YES you can grow here  = " + sapling);
+          return true;
+        }
+      }
+    }
+    else {
+      ModSaplings.logger.info(biomeId + "  has NO ENTRIES, so allow everything");
+      return true;
+    }
+    ModSaplings.logger.info("Not allowed ");
     return false;
   }
 
-  /**
-   * True bush; false air
-   * 
-   * @return
-   */
-  public static boolean bushOnDeny() {
-    // TODO Auto-generated method stub
-    return false;
+
+  public static boolean dropBlockOnGrowDeny() {
+    return dropBlockOnDeny;
   }
 }

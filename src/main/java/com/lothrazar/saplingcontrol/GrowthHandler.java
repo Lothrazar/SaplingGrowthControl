@@ -14,43 +14,23 @@ import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 
 public class GrowthHandler {
 
-	@SubscribeEvent
-	public void onSaplingGrowTreeEvent(SaplingGrowTreeEvent event) {
-		World world = event.getWorld();
-		BlockPos pos = event.getPos();
+  @SubscribeEvent
+  public void onSaplingGrowTreeEvent(SaplingGrowTreeEvent event) {
+    World world = event.getWorld();
+    BlockPos pos = event.getPos();
     IBlockState state = world.getBlockState(pos);
-		Block b = world.getBlockState(pos).getBlock();
-    ModSaplings.logger.error("Growth event " + pos + " " + b.getLocalizedName());
-    event.setCanceled(true);
-
-		boolean treeAllowedToGrow = false;
-
+    Block block = world.getBlockState(pos).getBlock();
+    ModSaplings.logger.error("Growth event " + pos + " " + block.getLocalizedName());
     Biome biome = world.getBiome(pos);
-			int growth_data = 8;// 0-5 is the type, then it adds on a 0x8
-
-    int meta = Blocks.SAPLING.getMetaFromState(state);
-			int tree_type = meta - growth_data;
-
-      treeAllowedToGrow = ModConfig.isAllowedToGrow(biome, state);
-
-
-			if (treeAllowedToGrow == false) {
-				event.setResult(Result.DENY);
-      if (ModConfig.dropOnFailedGrowth) {
-          world.destroyBlock(pos, true);
-        }
-
-				// overwrite the sapling. - we could set to Air first, but dont
-				// see much reason to
-        if (ModConfig.bushOnDeny()) {
-          world.setBlockState(pos, Blocks.DEADBUSH.getDefaultState());
-        }
-        else {
-          world.setBlockState(pos, Blocks.AIR.getDefaultState());
-        }
-			}
-
-	}
-
-
+    try {
+      if (ModConfig.isAllowedToGrow(biome, state) == false) {
+        event.setResult(Result.DENY);
+        world.destroyBlock(pos, ModConfig.dropBlockOnGrowDeny());
+        world.setBlockState(pos, Blocks.AIR.getDefaultState());
+      }
+    }
+    catch (Throwable e) {
+      ModSaplings.logger.error("sapling event ", e);
+    }
+  }
 }
