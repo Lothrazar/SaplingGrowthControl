@@ -16,11 +16,12 @@ public class GrowthHandler {
 
   @SubscribeEvent
   public void onSaplingGrowTreeEvent(SaplingGrowTreeEvent event) {
+
     World world = event.getWorld();
     BlockPos pos = event.getPos();
     IBlockState state = world.getBlockState(pos);
     Block block = world.getBlockState(pos).getBlock();
-    ModSaplings.logger.error("Growth event " + pos + " " + block.getLocalizedName());
+    ModSaplings.log("Growth event " + pos + " " + block.getLocalizedName());
     Biome biome = world.getBiome(pos);
     try {
       if (ModConfig.isAllowedToGrow(biome, state) == false) {

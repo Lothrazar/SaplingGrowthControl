@@ -15,12 +15,20 @@ public class ModConfig {
   private static final String jungle = "minecraft:sapling:3";
   private static final String acacia = "minecraft:sapling:4";
   private static final String darkoak = "minecraft:sapling:5";
+  private static boolean logSpamEverything;
+
+  public static boolean spam() {
+    return logSpamEverything;
+  }
 
   public static void loadConfig(Configuration config) {
     config.load();
     String category = ModSaplings.MODID;
     ModConfig.dropBlockOnDeny = config.getBoolean("dropBlockOnDeny", category, true, "If true, then whenever sapling growth "
         + "is denied it tries to drop the plant as an item.");
+    disableBonemeal = config.getBoolean("disableBonemeal", category, false, "If true, all bonemeal use on any block, "
+        + "sapling or crop or anything, is completely blocked.  ");
+    logSpamEverything = config.getBoolean("logSpamEverything", category, false, "If true, lots of events and data are logged.  Useful for debugging config values and building modpacks.  ");
     // @formatter:off
     String[] defaultValues = new String[]{
          "minecraft:forest#" + oak
@@ -91,12 +99,13 @@ public class ModConfig {
 
   static Map<String, String[]> biomeAllows = new HashMap<>();
   private static boolean dropBlockOnDeny;
+  private static boolean disableBonemeal;
 
   public static boolean isAllowedToGrow(Biome biome, IBlockState state) {
     int meta = 0;
     meta = state.getBlock().getMetaFromState(state);
     if (state.getBlock() == Blocks.SAPLING) {
-    int growthData = 8;// 0-5 is the type, then it adds on a 0x8
+      int growthData = 8;// 0-5 is the type, then it adds on a 0x8
       //now meta is tree type , ignoring grtowth 
       meta = meta - growthData;
     }
@@ -105,27 +114,28 @@ public class ModConfig {
     String biomeId = biome.getRegistryName().toString();
     if (biomeAllows.containsKey(biomeId) && biomeAllows.get(biomeId) != null) {
       String[] blocksAllowed = biomeAllows.get(biomeId);
-
-      
-      ModSaplings.logger.info(biomeId + " entry = " + blocksAllowed.length);
+      ModSaplings.log(biomeId + " entry = " + blocksAllowed.length);
       for (String sapling : blocksAllowed) {
-        ModSaplings.logger.info(" ? " + sapling + "<->" + blockIdWithMeta);
+        ModSaplings.log(" ? " + sapling + "<->" + blockIdWithMeta);
         if (blockId.equals(sapling) || blockIdWithMeta.equals(sapling)) {
-          ModSaplings.logger.info("YES you can grow here  = " + sapling);
+          ModSaplings.log("YES you can grow here  = " + sapling);
           return true;
         }
       }
     }
     else {
-      ModSaplings.logger.info(biomeId + "  has NO ENTRIES, so allow everything");
+      ModSaplings.log(biomeId + "  has NO ENTRIES, so allow everything");
       return true;
     }
-    ModSaplings.logger.info("Not allowed ");
+    ModSaplings.log("Not allowed ");
     return false;
   }
 
-
   public static boolean dropBlockOnGrowDeny() {
     return dropBlockOnDeny;
+  }
+
+  public static boolean cancelAllBonemeal() {
+    return disableBonemeal;
   }
 }
