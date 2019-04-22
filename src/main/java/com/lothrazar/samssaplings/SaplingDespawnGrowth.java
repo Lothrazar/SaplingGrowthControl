@@ -32,12 +32,6 @@ public class SaplingDespawnGrowth {
 	public SaplingDespawnGrowth() {
 	}
 
-	private static final int sapling_oak = 0;
-	private static final int sapling_spruce = 1;
-	private static final int sapling_birch = 2;
-	private static final int sapling_jungle = 3;
-	private static final int sapling_acacia = 4;
-	private static final int sapling_darkoak = 5;
 
 	@SubscribeEvent
 	public void onSaplingGrowTreeEvent(SaplingGrowTreeEvent event) {

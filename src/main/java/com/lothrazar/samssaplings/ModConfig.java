@@ -6,6 +6,13 @@ import net.minecraftforge.common.config.Configuration;
 
 public class ModConfig {
 
+  private static final String oak = "minecraft:sapling:0";
+  private static final String spruce = "minecraft:sapling:1";
+  private static final String birch = "minecraft:sapling:2";
+  private static final String jungle = "minecraft:sapling:3";
+  private static final String acacia = "minecraft:sapling:4";
+  private static final String darkoak = "minecraft:sapling:5";
+
   public static void loadConfig(Configuration config) {
     config.load();
     //replanting different mod eh
@@ -14,52 +21,53 @@ public class ModConfig {
     String category = ModSaplings.MODID;
  // @formatter:off
     String[] defaultValues = new String[]{
-         "minecraft:ocean#minecraft:sapling"
-        ,"minecraft:plains#minecraft:sapling"
-        ,"minecraft:desert#minecraft:sapling"
-        ,"minecraft:extreme_hills#minecraft:sapling"
-        ,"minecraft:forest#minecraft:sapling"
-        ,"minecraft:taiga#minecraft:sapling"
-        ,"minecraft:swampland#minecraft:sapling"
-        ,"minecraft:river#minecraft:sapling"
-        ,"minecraft:hell#minecraft:sapling"
-        ,"minecraft:sky#minecraft:sapling"
-        ,"minecraft:frozen_ocean#minecraft:sapling"
-        ,"minecraft:frozen_river#minecraft:sapling"
-        ,"minecraft:ice_flats#minecraft:sapling"
-        ,"minecraft:ice_mountains#minecraft:sapling"
-        ,"minecraft:mushroom_island#minecraft:sapling"
-        ,"minecraft:mushroom_island_shore#minecraft:sapling"
-        ,"minecraft:beaches#minecraft:sapling"
-        ,"minecraft:desert_hills#minecraft:sapling"
-        ,"minecraft:forest_hills#minecraft:sapling"
-        ,"minecraft:taiga_hills#minecraft:sapling"
-        ,"minecraft:smaller_extreme_hills#minecraft:sapling"
-        ,"minecraft:jungle#minecraft:sapling"
-        ,"minecraft:jungle_hills#minecraft:sapling"
-        ,"minecraft:jungle_edge#minecraft:sapling"
-        ,"minecraft:deep_ocean#minecraft:sapling"
-        ,"minecraft:stone_beach#minecraft:sapling"
-        ,"minecraft:cold_beach#minecraft:sapling"
-        ,"minecraft:birch_forest#minecraft:sapling"
-        ,"minecraft:birch_forest_hills#minecraft:sapling"
-        ,"minecraft:roofed_forest#minecraft:sapling"
-        ,"minecraft:taiga_cold#minecraft:sapling"
-        ,"minecraft:taiga_cold_hills#minecraft:sapling"
-        ,"minecraft:redwood_taiga#minecraft:sapling"
-        ,"minecraft:redwood_taiga_hills#minecraft:sapling"
-        ,"minecraft:extreme_hills_with_trees#minecraft:sapling"
-        ,"minecraft:savanna#minecraft:sapling"
-        ,"minecraft:savanna_rock#minecraft:sapling"
-        ,"minecraft:mesa#minecraft:sapling"
-        ,"minecraft:mesa_rock#minecraft:sapling"
-        ,"minecraft:mesa_clear_rock#minecraft:sapling"
+         "minecraft:forest#" + oak
+        ,"minecraft:forest_hills#" + oak
+        ,"minecraft:swampland#"+ oak
+        ,"minecraft:smaller_extreme_hills#" + spruce
+        ,"minecraft:extreme_hills_with_trees#" + spruce
+        ,"minecraft:extreme_hills#" + spruce
+        ,"minecraft:taiga#" + spruce
+        ,"minecraft:taiga_hills#" + spruce
+        ,"minecraft:redwood_taiga#" + spruce
+        ,"minecraft:redwood_taiga_hills#" + spruce
+        ,"minecraft:jungle#"+ jungle
+        ,"minecraft:jungle_hills#"+ jungle
+        ,"minecraft:jungle_edge#"+ jungle
+        ,"minecraft:birch_forest#" + birch
+        ,"minecraft:birch_forest_hills#" + birch
+        ,"minecraft:roofed_forest#" + darkoak
+        ,"minecraft:savanna#" + acacia
+        ,"minecraft:savanna_rock#" + acacia
+        ,"minecraft:mesa#" + acacia
+        ,"minecraft:mesa_rock#" + String.join(",", acacia, darkoak)
+        ,"minecraft:mesa_clear_rock#" + acacia
+        ,"minecraft:ocean#"
+        ,"minecraft:plains#"
+        ,"minecraft:desert#"
+        ,"minecraft:desert_hills#" 
+        ,"minecraft:river#"
+        ,"minecraft:hell#"
+        ,"minecraft:sky#"
+        ,"minecraft:ice_flats#"
+        ,"minecraft:ice_mountains#"
+        ,"minecraft:mushroom_island#"
+        ,"minecraft:mushroom_island_shore#"
+        ,"minecraft:taiga_cold#"
+        ,"minecraft:taiga_cold_hills#"
+        ,"minecraft:frozen_ocean#"
+        ,"minecraft:frozen_river#"
+        ,"minecraft:deep_ocean#"
+        ,"minecraft:stone_beach#"
+        ,"minecraft:beaches#"
+        ,"minecraft:cold_beach#"
     }; 
     // @formatter:on
     String[] mapListRaw = config.getStringList("biome sapling map", category, defaultValues, "entry must be 'biome#list,of,sapling,item,ids'.  "
         + "An empty entry for a biome means all saplings disabled in this biome.  "
         + "No entry for a biome means no changes for that biome, this mod ignores it.  "
-        + "Biome IDs must be unique, if the same one is listed twice it might probably take the second.  ");
+        + "Biome IDs must be unique, if the same one is listed twice it might probably take the second.  "
+        + "For , 0=oak,1=spruce,2=birch,3=jungle,4=acacia,5=darkoak");
     if (config.hasChanged()) {
       config.save();
     }
