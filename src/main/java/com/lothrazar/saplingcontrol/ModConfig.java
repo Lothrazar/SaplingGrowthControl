@@ -1,4 +1,4 @@
-package com.lothrazar.samssaplings;
+package com.lothrazar.saplingcontrol;
 
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.world.biome.Biome;
@@ -12,6 +12,9 @@ public class ModConfig {
   private static final String jungle = "minecraft:sapling:3";
   private static final String acacia = "minecraft:sapling:4";
   private static final String darkoak = "minecraft:sapling:5";
+
+  public static boolean dropOnFailedGrowth;
+  public static boolean plantDespawningSaplings;
 
   public static void loadConfig(Configuration config) {
     config.load();
@@ -29,8 +32,8 @@ public class ModConfig {
         ,"minecraft:extreme_hills#" + spruce
         ,"minecraft:taiga#" + spruce
         ,"minecraft:taiga_hills#" + spruce
-        ,"minecraft:redwood_taiga#" + spruce
-        ,"minecraft:redwood_taiga_hills#" + spruce
+        ,"minecraft:redwood_taiga#" + String.join(",", spruce, darkoak)
+        ,"minecraft:redwood_taiga_hills#" + String.join(",", spruce, darkoak)
         ,"minecraft:jungle#"+ jungle
         ,"minecraft:jungle_hills#"+ jungle
         ,"minecraft:jungle_edge#"+ jungle
@@ -40,7 +43,7 @@ public class ModConfig {
         ,"minecraft:savanna#" + acacia
         ,"minecraft:savanna_rock#" + acacia
         ,"minecraft:mesa#" + acacia
-        ,"minecraft:mesa_rock#" + String.join(",", acacia, darkoak)
+        ,"minecraft:mesa_rock#" + acacia
         ,"minecraft:mesa_clear_rock#" + acacia
         ,"minecraft:ocean#"
         ,"minecraft:plains#"

@@ -10,7 +10,7 @@ buildscript {
 apply plugin: 'net.minecraftforge.gradle.forge'
 
 version = "${mc_version}-${mod_version}"
-group= "com.lothrazar.samssaplings"
+group= "com.lothrazar.saplingcontrol"
 archivesBaseName = "SaplingControl"
 
 sourceCompatibility = targetCompatibility = '1.8'
@@ -61,8 +61,6 @@ repositories {
 }
 dependencies {
    deobfCompile "mezz.jei:jei_${mc_version}:${jei_version}"
-   deobfCompile "fastworkbench:FastWorkbench:${mc_version}:${fb_version}"
-   deobfCompile "compact-machines:compactmachines3-${mc_version}:${cm_version}:${cm_build}"
 }
 
 processResources {
