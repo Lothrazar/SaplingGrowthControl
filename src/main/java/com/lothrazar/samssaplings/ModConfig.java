@@ -1,63 +1,82 @@
 package com.lothrazar.samssaplings;
 
-import java.util.ArrayList;
-import org.apache.logging.log4j.Level;
+import net.minecraft.block.state.IBlockState;
+import net.minecraft.world.biome.Biome;
 import net.minecraftforge.common.config.Configuration;
 
 public class ModConfig {
-	public static void loadConfig(Configuration config) {
-		config.load();
 
-		SaplingDespawnGrowth.plantDespawningSaplings = config.getBoolean("sapling_plant_despawn", ModSaplings.MODID, true, "When a sapling (or mushroom) despawns while sitting on grass or dirt, it will instead attempt to plant itself.");
+  public static void loadConfig(Configuration config) {
+    config.load();
+    //replanting different mod eh
+    //	SaplingDespawnGrowth.chanceReplantDespawning = config.getBoolean("sapling_plant_despawn", ModSaplings.MODID, true, "When a sapling (or mushroom) despawns while sitting on grass or dirt, it will instead attempt to plant itself.");
+    //SaplingDespawnGrowth.drop_on_failed_growth = config.getBoolean("drop_on_failed_growth", ModSaplings.MODID, true, "When a sapling fails to grow and turns to a dead bush, if this is true than the sapling item will also drop on the ground.");
+    String category = ModSaplings.MODID;
+ // @formatter:off
+    String[] defaultValues = new String[]{
+         "minecraft:ocean#minecraft:sapling"
+        ,"minecraft:plains#minecraft:sapling"
+        ,"minecraft:desert#minecraft:sapling"
+        ,"minecraft:extreme_hills#minecraft:sapling"
+        ,"minecraft:forest#minecraft:sapling"
+        ,"minecraft:taiga#minecraft:sapling"
+        ,"minecraft:swampland#minecraft:sapling"
+        ,"minecraft:river#minecraft:sapling"
+        ,"minecraft:hell#minecraft:sapling"
+        ,"minecraft:sky#minecraft:sapling"
+        ,"minecraft:frozen_ocean#minecraft:sapling"
+        ,"minecraft:frozen_river#minecraft:sapling"
+        ,"minecraft:ice_flats#minecraft:sapling"
+        ,"minecraft:ice_mountains#minecraft:sapling"
+        ,"minecraft:mushroom_island#minecraft:sapling"
+        ,"minecraft:mushroom_island_shore#minecraft:sapling"
+        ,"minecraft:beaches#minecraft:sapling"
+        ,"minecraft:desert_hills#minecraft:sapling"
+        ,"minecraft:forest_hills#minecraft:sapling"
+        ,"minecraft:taiga_hills#minecraft:sapling"
+        ,"minecraft:smaller_extreme_hills#minecraft:sapling"
+        ,"minecraft:jungle#minecraft:sapling"
+        ,"minecraft:jungle_hills#minecraft:sapling"
+        ,"minecraft:jungle_edge#minecraft:sapling"
+        ,"minecraft:deep_ocean#minecraft:sapling"
+        ,"minecraft:stone_beach#minecraft:sapling"
+        ,"minecraft:cold_beach#minecraft:sapling"
+        ,"minecraft:birch_forest#minecraft:sapling"
+        ,"minecraft:birch_forest_hills#minecraft:sapling"
+        ,"minecraft:roofed_forest#minecraft:sapling"
+        ,"minecraft:taiga_cold#minecraft:sapling"
+        ,"minecraft:taiga_cold_hills#minecraft:sapling"
+        ,"minecraft:redwood_taiga#minecraft:sapling"
+        ,"minecraft:redwood_taiga_hills#minecraft:sapling"
+        ,"minecraft:extreme_hills_with_trees#minecraft:sapling"
+        ,"minecraft:savanna#minecraft:sapling"
+        ,"minecraft:savanna_rock#minecraft:sapling"
+        ,"minecraft:mesa#minecraft:sapling"
+        ,"minecraft:mesa_rock#minecraft:sapling"
+        ,"minecraft:mesa_clear_rock#minecraft:sapling"
+    }; 
+    // @formatter:on
+    String[] mapListRaw = config.getStringList("biome sapling map", category, defaultValues, "entry must be 'biome#list,of,sapling,item,ids'.  "
+        + "An empty entry for a biome means all saplings disabled in this biome.  "
+        + "No entry for a biome means no changes for that biome, this mod ignores it.  "
+        + "Biome IDs must be unique, if the same one is listed twice it might probably take the second.  ");
+    if (config.hasChanged()) {
+      config.save();
+    }
+  }
 
-		SaplingDespawnGrowth.drop_on_failed_growth = config.getBoolean("drop_on_failed_growth", ModSaplings.MODID, true, "When a sapling fails to grow and turns to a dead bush, if this is true than the sapling item will also drop on the ground.");
+  public static boolean isAllowedToGrow(Biome biome, IBlockState state) {
+    // TODO Auto-generated method stub
+    return false;
+  }
 
-		String category = "sapling_biome_map";
-
-		config.addCustomCategoryComment(category, "A list of biome IDs that each sapling is allowed to grow in.  ");
-
-		String oakCSV = config.get(category, "oak", "4, 18, 132, 39, 166, 167, 21, 23, 151, 149, 22, 6, 134, 3, 20, 34, 12, 29, 157").getString();
-		SaplingDespawnGrowth.oakBiomes = csvToInt(oakCSV);
-
-		String acaciaCSV = config.get(category, "acacia", "35, 36, 38, 163, 164").getString();
-		SaplingDespawnGrowth.acaciaBiomes = csvToInt(acaciaCSV);
-
-		String spruceCSV = config.get(category, "spruce", "5, 19, 32, 160, 161, 33, 30, 31, 158, 3, 20, 34, 21, 12, 13").getString();
-		SaplingDespawnGrowth.spruceBiomes = csvToInt(spruceCSV);
-
-		String birchCSV = config.get(category, "birch", "27, 28, 155, 156, 4, 18, 132, 29, 157").getString();
-		SaplingDespawnGrowth.birchBiomes = csvToInt(birchCSV);
-
-		String darkCSV = config.get(category, "dark_oak", "29, 157").getString();
-		SaplingDespawnGrowth.darkoakBiomes = csvToInt(darkCSV);
-
-		String jungleCSV = config.get(category, "jungle", "21, 23, 22, 149, 151").getString();
-		SaplingDespawnGrowth.jungleBiomes = csvToInt(jungleCSV);
-
-		if (config.hasChanged()) {
-			config.save();
-		}
-	}
-
-	private static ArrayList<Integer> csvToInt(String csv) {
-		// does not check validity of biome ids
-		ArrayList<Integer> bi = new ArrayList<Integer>();
-
-		String[] list = csv.split(",");
-
-		int biome;
-
-		for (String s_id : list) {
-			try {
-				biome = Integer.parseInt(s_id.trim());
-
-				bi.add(biome);
-			}
-			catch (Exception e) {
-				ModSaplings.logger.log(Level.WARN, "Invalid biome id from config file, must be integer: " + s_id);
-			}
-		}
-
-		return bi;
-	}
+  /**
+   * True bush; false air
+   * 
+   * @return
+   */
+  public static boolean bushOnDeny() {
+    // TODO Auto-generated method stub
+    return false;
+  }
 }
