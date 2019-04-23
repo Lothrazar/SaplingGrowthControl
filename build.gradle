@@ -10,8 +10,8 @@ buildscript {
 apply plugin: 'net.minecraftforge.gradle.forge'
 
 version = "${mc_version}-${mod_version}"
-group= "com.lothrazar.saplingcontrol"
-archivesBaseName = "SaplingControl"
+group= "com.lothrazar.biomegrowthcontrol"
+archivesBaseName = "BiomeGrowthControl"
 
 sourceCompatibility = targetCompatibility = '1.8'
 compileJava {

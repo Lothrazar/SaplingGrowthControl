@@ -1,4 +1,4 @@
-package com.lothrazar.saplingcontrol;
+package com.lothrazar.biomegrowthcontrol;
 
 import java.util.HashMap;
 import java.util.Map;

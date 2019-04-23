@@ -1,4 +1,4 @@
-package com.lothrazar.saplingcontrol;
+package com.lothrazar.biomegrowthcontrol;
 
 import org.apache.logging.log4j.Logger;
 import net.minecraft.entity.item.EntityItem;
@@ -15,7 +15,7 @@ import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
 @Mod(modid = ModSaplings.MODID, useMetadata = true, updateJSON = "https://raw.githubusercontent.com/LothrazarMinecraftMods/SaplingGrowthControl/master/update.json")
 public class ModSaplings {
 
-  public static final String MODID = "saplingcontrol";
+  public static final String MODID = "biomegrowthcontrol";
   public static Logger logger;
   @Instance(value = MODID)
   public static ModSaplings instance;

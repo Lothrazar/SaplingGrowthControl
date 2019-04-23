@@ -1,4 +1,4 @@
-package com.lothrazar.saplingcontrol;
+package com.lothrazar.biomegrowthcontrol;
 
 import net.minecraft.block.Block;
 import net.minecraft.block.state.IBlockState;
