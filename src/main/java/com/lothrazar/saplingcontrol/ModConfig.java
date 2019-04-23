@@ -21,7 +21,7 @@ public class ModConfig {
   static String plainsSet = String.join(",", "minecraft:wheat", "minecraft:carrots");
   static String desertSet = String.join(",", "minecraft:cactus");
   static String riverBeachSet = String.join(",", "minecraft:reeds");
-  static String endSet = String.join(",", "minecraft:chorus_flower", "minecraft:chorus_plant");
+  static String endSet = String.join(",", "minecraft:chorus_flower", "minecraft:chorus_plant", "endercrop:ender_crop");
   private static boolean logSpamEverything;
 
   public static boolean spam() {
@@ -31,11 +31,11 @@ public class ModConfig {
   public static void loadConfig(Configuration config) {
     config.load();
     String category = ModSaplings.MODID;
-    disableBonemeal = config.getBoolean("disableBonemeal", category, true, "If true, all bonemeal use on any block, "
-        + "sapling or crop or anything, is completely blocked.  ");
+    //    disableBonemeal = config.getBoolean("disableBonemeal", category, true, "If true, all bonemeal use on any block, "
+    //        + "sapling or crop or anything, is completely blocked.  ");
     logSpamEverything = config.getBoolean("logSpamEverything", category, false, "If true, lots of events and data are logged.  Useful for debugging config values and building modpacks.  ");
     ModConfig.dropBlockOnDeny = config.getBoolean("dropBlockOnDeny", category, true, "If true, then whenever sapling growth "
-        + "is denied it tries to drop the plant as an item.");
+        + "is denied it tries to drop the plant as an item.  Does not work on crops or every single block.");
     // @formatter:off
     String[] defaultValues = new String[]{
          "minecraft:hell#"
@@ -114,7 +114,7 @@ public class ModConfig {
 
   static Map<String, String[]> biomeAllows = new HashMap<>();
   private static boolean dropBlockOnDeny;
-  private static boolean disableBonemeal;
+  // private static boolean disableBonemeal;
 
   public static boolean isAllowedToGrow(Biome biome, IBlockState state) {
     int meta = state.getBlock().getMetaFromState(state);
@@ -155,7 +155,4 @@ public class ModConfig {
     return dropBlockOnDeny;
   }
 
-  public static boolean cancelAllBonemeal() {
-    return disableBonemeal;
-  }
 }

@@ -36,12 +36,14 @@ public class GrowthHandler {
       if (ModConfig.isAllowedToGrow(biome, state) == false) {
         if (block == Blocks.CHORUS_PLANT) {
           if (world.getBlockState(pos.up()).getBlock() == Blocks.CHORUS_FLOWER) {
-            world.destroyBlock(pos.up(), true);
+            world.destroyBlock(pos.up(), ModConfig.dropBlockOnGrowDeny());
             world.destroyBlock(pos, false);
-
           }
         }
         event.setResult(Result.DENY);
+        if (ModConfig.dropBlockOnGrowDeny()) {
+          world.destroyBlock(pos, true);
+        }
       }
     }
     catch (Throwable e) {
@@ -60,8 +62,11 @@ public class GrowthHandler {
     try {
       if (ModConfig.isAllowedToGrow(biome, state) == false) {
         event.setResult(Result.DENY);
-        world.destroyBlock(pos, ModConfig.dropBlockOnGrowDeny());
-        world.setBlockState(pos, Blocks.AIR.getDefaultState());
+        //        world.spawnParticle(EnumParticleTypes.BARRIER, xCoord, yCoord, zCoord, xSpeed, ySpeed, zSpeed, parameters);
+        if (ModConfig.dropBlockOnGrowDeny()) {
+          world.destroyBlock(pos, true);
+          world.setBlockState(pos, Blocks.AIR.getDefaultState());
+        }
       }
     }
     catch (Throwable e) {

@@ -28,7 +28,6 @@ public class ModSaplings {
     GrowthHandler grower = new GrowthHandler();
     MinecraftForge.TERRAIN_GEN_BUS.register(grower);
     MinecraftForge.EVENT_BUS.register(grower);
-    MinecraftForge.EVENT_BUS.register(new BonemealHandler());
   }
 
   public static EntityItem dropItemStackInWorld(World world, BlockPos pos, ItemStack stack) {
