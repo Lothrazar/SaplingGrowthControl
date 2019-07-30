@@ -10,13 +10,14 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.IWorld;
 import net.minecraft.world.World;
 import net.minecraft.world.biome.Biome;
+import net.minecraft.world.biome.Biomes;
 import net.minecraftforge.event.world.SaplingGrowTreeEvent;
 import net.minecraftforge.eventbus.api.Event;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 
 public class SaplingDespawnGrowth {
 
-  public static List<Integer> oakBiomes = new ArrayList<Integer>();
+  public static List<String> oakBiomes = new ArrayList<>();
   public static List<Integer> spruceBiomes = new ArrayList<Integer>();
   public static List<Integer> birchBiomes = new ArrayList<Integer>();
   public static List<Integer> jungleBiomes = new ArrayList<Integer>();
