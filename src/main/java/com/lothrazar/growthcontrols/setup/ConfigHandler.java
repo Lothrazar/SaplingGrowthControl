@@ -32,7 +32,7 @@ public class ConfigHandler {
       , "minecraft:badlands_plateau"
   };
   String[] oceans = new String[] {
-      , "minecraft:ocean"
+       "minecraft:ocean"
       , "minecraft:river"
       , "minecraft:frozen_ocean"
       , "minecraft:frozen_river"
