@@ -6,13 +6,20 @@ import com.lothrazar.growthcontrols.ModSaplings;
 import net.minecraftforge.common.ForgeConfigSpec;
 
 import java.nio.file.Path;
+import java.util.Arrays;
+import java.util.List;
 
 public class ConfigHandler {
 
   private static final ForgeConfigSpec.Builder COMMON_BUILDER = new ForgeConfigSpec.Builder();
   public static ForgeConfigSpec COMMON_CONFIG;
-  public static ForgeConfigSpec.BooleanValue TOOLTIPS;
-  String[] mushrooms = new String[] {
+  public static ForgeConfigSpec.ConfigValue<List<String>> OAK_BIOMES;
+  private static ForgeConfigSpec.ConfigValue<List<String>> BIRCH_BIOMES;
+  private static ForgeConfigSpec.ConfigValue<List<String>> SPRUCE_BIOMES;
+  private static ForgeConfigSpec.ConfigValue<List<String>> ACACIA_BIOMES;
+  private static ForgeConfigSpec.ConfigValue<List<String>> JUNGLE_BIOMES;
+  public static ForgeConfigSpec.ConfigValue<List<String>> DARKOAK_BIOMES;
+  private static final String[] mushrooms = new String[] {
       "minecraft:mushroom_fields"
       , "minecraft:mushroom_field_shore"
       , "minecraft:nether"
@@ -23,7 +30,7 @@ public class ConfigHandler {
       , "minecraft:the_end"
       , "minecraft:the_void"
   };
-  String[] badlands = new String[] {
+  private static final String[] badlands = new String[] {
       "minecraft:eroded_badlands"
       , "minecraft:modified_wooded_badlands_plateau"
       , "minecraft:modified_badlands_plateau"
@@ -31,8 +38,8 @@ public class ConfigHandler {
       , "minecraft:wooded_badlands_plateau"
       , "minecraft:badlands_plateau"
   };
-  String[] oceans = new String[] {
-       "minecraft:ocean"
+  private static final String[] oceans = new String[] {
+      "minecraft:ocean"
       , "minecraft:river"
       , "minecraft:frozen_ocean"
       , "minecraft:frozen_river"
@@ -46,7 +53,7 @@ public class ConfigHandler {
       , "minecraft:deep_cold_ocean"
       , "minecraft:deep_frozen_ocean"
   };
-  String[] spruce = new String[] {
+  private static final String[] spruce = new String[] {
       "minecraft:taiga"
       , "minecraft:giant_tree_taiga"
       , "minecraft:snowy_tundra"
@@ -54,7 +61,7 @@ public class ConfigHandler {
       , "minecraft:snowy_taiga"
       , "minecraft:snowy_taiga_hills"
       , "minecraft:giant_tree_taiga_hills" };
-  String[] oak = new String[] {
+  private static final String[] oak = new String[] {
       "minecraft:forest"
       , "minecraft:dark_forest"
       , "minecraft:wooded_mountains"
@@ -63,18 +70,18 @@ public class ConfigHandler {
       , "minecraft:swamp_hills"
       , "minecraft:flower_forest"
   };
-  String[] birch = new String[] {
+  private static final String[] birch = new String[] {
       "minecraft:birch_forest"
       , "minecraft:forest"
       , "minecraft:birch_forest_hills"
       , "minecraft:tall_birch_forest"
       , "minecraft:tall_birch_hills" };
-  String[] darkoak = new String[] {
+  private static final String[] darkoak = new String[] {
       "minecraft:dark_forest"
       , "minecraft:dark_forest_hills"
       , "minecraft:flower_forest"
   };
-  String[] jungle = new String[] {
+  private static final String[] jungle = new String[] {
       "minecraft:jungle_edge"
       , "minecraft:jungle"
       , "minecraft:jungle_hills"
@@ -83,7 +90,7 @@ public class ConfigHandler {
       , "minecraft:bamboo_jungle_hills"
       , "minecraft:modified_jungle_edge"
       , "minecraft:modified_jungle" };
-  String[] acacia = new String[] {
+  private static final String[] acacia = new String[] {
       "minecraft:savanna"
       , "minecraft:shattered_savanna"
       , "minecraft:shattered_savanna_plateau"
@@ -97,14 +104,21 @@ public class ConfigHandler {
   }
 
   private static void initConfig() {
+    //TODO: reverse allcapas and finalstatic
     COMMON_BUILDER.comment("General settings").push(ModSaplings.MODID);
-    TOOLTIPS = COMMON_BUILDER.comment("Testing config Tooltip").define("itemTooltip", true);
+    //    OAK_BIOMES = COMMON_BUILDER.comment("Testing config Tooltip").define("itemTooltip", true);
+    OAK_BIOMES = COMMON_BUILDER.comment("List of biomes for sapling").define("minecraft:oak_sapling", Arrays.asList(oak));
+    BIRCH_BIOMES = COMMON_BUILDER.comment("List of biomes for sapling").define("minecraft:birch_sapling", Arrays.asList(birch));
+    SPRUCE_BIOMES = COMMON_BUILDER.comment("List of biomes for sapling").define("minecraft:spruce_sapling", Arrays.asList(spruce));
+    JUNGLE_BIOMES = COMMON_BUILDER.comment("List of biomes for sapling").define("minecraft:jungle_sapling", Arrays.asList(jungle));
+    ACACIA_BIOMES = COMMON_BUILDER.comment("List of biomes for sapling").define("minecraft:acacia_sapling", Arrays.asList(acacia));
+    DARKOAK_BIOMES = COMMON_BUILDER.comment("List of biomes for sapling").define("minecraft:darkoak_sapling", Arrays.asList(darkoak));
     COMMON_BUILDER.pop();
     COMMON_CONFIG = COMMON_BUILDER.build();
   }
 
-  public static boolean tooltipsEnabled() {
-    return TOOLTIPS.get();
+  public static List<String> getOakBiomes() {
+    return OAK_BIOMES.get();
   }
 
   public static void loadConfig(ForgeConfigSpec spec, Path path) {
