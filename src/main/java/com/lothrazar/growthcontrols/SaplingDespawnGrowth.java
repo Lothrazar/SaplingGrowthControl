@@ -1,7 +1,9 @@
 package com.lothrazar.growthcontrols;
-import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
+import com.lothrazar.growthcontrols.setup.ConfigHandler;
 import net.minecraft.block.Block;
 import net.minecraft.block.Blocks;
 import net.minecraft.entity.item.ItemEntity;
@@ -10,26 +12,33 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.IWorld;
 import net.minecraft.world.World;
 import net.minecraft.world.biome.Biome;
-import net.minecraft.world.biome.Biomes;
 import net.minecraftforge.event.world.SaplingGrowTreeEvent;
 import net.minecraftforge.eventbus.api.Event;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 
 public class SaplingDespawnGrowth {
 
-  public static List<String> oakBiomes = new ArrayList<>();
-  public static List<Integer> spruceBiomes = new ArrayList<Integer>();
-  public static List<Integer> birchBiomes = new ArrayList<Integer>();
-  public static List<Integer> jungleBiomes = new ArrayList<Integer>();
-  public static List<Integer> darkoakBiomes = new ArrayList<Integer>();
-  public static List<Integer> acaciaBiomes = new ArrayList<Integer>();
   public static boolean drop_on_failed_growth = true;
   public static boolean plantDespawningSaplings;
 
   public SaplingDespawnGrowth() {
   }
 
-
+  private List<String> getBiomesForGrowth(Block block) {
+    //TODO: map
+    Map<String, List<String>> mapInit = new HashMap<>();
+    mapInit.put(Blocks.ACACIA_SAPLING.getRegistryName().toString(), ConfigHandler.ACACIA_BIOMES.get());
+    mapInit.put(Blocks.BIRCH_SAPLING.getRegistryName().toString(), ConfigHandler.BIRCH_BIOMES.get());
+    mapInit.put(Blocks.SPRUCE_SAPLING.getRegistryName().toString(), ConfigHandler.SPRUCE_BIOMES.get());
+    mapInit.put(Blocks.OAK_SAPLING.getRegistryName().toString(), ConfigHandler.OAK_BIOMES.get());
+    mapInit.put(Blocks.DARK_OAK_SAPLING.getRegistryName().toString(), ConfigHandler.DARKOAK_BIOMES.get());
+    mapInit.put(Blocks.JUNGLE_SAPLING.getRegistryName().toString(), ConfigHandler.JUNGLE_BIOMES.get());
+    String key = block.getRegistryName().toString();
+    if (mapInit.containsKey(key) == false) {
+      return null;
+    }
+    return mapInit.get(key);
+  }
 
   @SubscribeEvent
   public void onSaplingGrowTreeEvent(SaplingGrowTreeEvent event) {
@@ -37,24 +46,24 @@ public class SaplingDespawnGrowth {
     BlockPos pos = event.getPos();
     Block b = world.getBlockState(pos).getBlock();
     boolean treeAllowedToGrow = false;
-    if (b == Blocks.SPRUCE_SAPLING)// this may not always be true: such as trees
-    // added by Mods, so not a vanilla tree, but
-    // throwing same event
-    {
-      Biome biome = world.getBiome(pos);
-      String biomeId = biome.getRegistryName().toString();
-      treeAllowedToGrow = false;//from biome
-      if (treeAllowedToGrow == false) {
-        event.setResult(Event.Result.DENY);
-        // overwrite the sapling. - we could set to Air first, but dont
-        // see much reason to
-        world.setBlockState(pos, Blocks.DEAD_BUSH.getDefaultState(),  3);
-        if (drop_on_failed_growth) {
-          dropItemStackInWorld((World) world, pos, new ItemStack(b));
-        }
+    Biome biome = world.getBiome(pos);
+    String biomeId = biome.getRegistryName().toString();
+    List<String> allowed = this.getBiomesForGrowth(b);
+    treeAllowedToGrow = allowed.contains(biomeId);//from biome
+    ModSaplings.LOGGER.info(treeAllowedToGrow +" treeAllowedToGrow  "
+        + biomeId + allowed.size());
+    if (treeAllowedToGrow == false) {
+      event.setResult(Event.Result.DENY);
+      // overwrite the sapling. - we could set to Air first, but dont
+      // see much reason to
+      world.setBlockState(pos, Blocks.DEAD_BUSH.getDefaultState(), 3);
+      if (drop_on_failed_growth) {
+        dropItemStackInWorld((World) world, pos, new ItemStack(b));
       }
     }// else a tree grew that was added by some mod
+
   }
+
   //
   //	@SubscribeEvent
   //	public void onItemExpireEvent(ItemExpireEvent event) {

@@ -14,10 +14,10 @@ public class ConfigHandler {
   private static final ForgeConfigSpec.Builder COMMON_BUILDER = new ForgeConfigSpec.Builder();
   public static ForgeConfigSpec COMMON_CONFIG;
   public static ForgeConfigSpec.ConfigValue<List<String>> OAK_BIOMES;
-  private static ForgeConfigSpec.ConfigValue<List<String>> BIRCH_BIOMES;
-  private static ForgeConfigSpec.ConfigValue<List<String>> SPRUCE_BIOMES;
-  private static ForgeConfigSpec.ConfigValue<List<String>> ACACIA_BIOMES;
-  private static ForgeConfigSpec.ConfigValue<List<String>> JUNGLE_BIOMES;
+  public static ForgeConfigSpec.ConfigValue<List<String>> BIRCH_BIOMES;
+  public static ForgeConfigSpec.ConfigValue<List<String>> SPRUCE_BIOMES;
+  public static ForgeConfigSpec.ConfigValue<List<String>> ACACIA_BIOMES;
+  public static ForgeConfigSpec.ConfigValue<List<String>> JUNGLE_BIOMES;
   public static ForgeConfigSpec.ConfigValue<List<String>> DARKOAK_BIOMES;
   private static final String[] mushrooms = new String[] {
       "minecraft:mushroom_fields"
@@ -117,9 +117,6 @@ public class ConfigHandler {
     COMMON_CONFIG = COMMON_BUILDER.build();
   }
 
-  public static List<String> getOakBiomes() {
-    return OAK_BIOMES.get();
-  }
 
   public static void loadConfig(ForgeConfigSpec spec, Path path) {
     final CommentedFileConfig configData = CommentedFileConfig.builder(path)

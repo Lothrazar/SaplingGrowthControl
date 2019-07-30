@@ -27,7 +27,7 @@ public class ModSaplings {
   private String certificateFingerprint = "@FINGERPRINT@";
   public static final IProxy proxy = DistExecutor.runForDist(() -> () -> new ClientProxy(), () -> () -> new ServerProxy());
 
-  private static final Logger LOGGER = LogManager.getLogger();
+  public static final Logger LOGGER = LogManager.getLogger();
 //  public static Logger logger;
 
   public ModSaplings() {
