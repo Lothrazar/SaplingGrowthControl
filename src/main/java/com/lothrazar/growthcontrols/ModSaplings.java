@@ -36,9 +36,9 @@ public class ModSaplings {
   }
 
   private void setup(final FMLCommonSetupEvent event) {
-//    for (Biome b : Biome.BIOMES) {
-//      LOGGER.info("\"" + b.getRegistryName().toString() + "\"");
-//    }
+    for (Biome b : Biome.BIOMES) {
+      LOGGER.info("\"" + b.getRegistryName().toString() + "\"");
+    }
   }
 
   @SubscribeEvent

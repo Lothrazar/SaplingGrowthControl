@@ -16,7 +16,9 @@ import java.util.Map;
 public class ConfigHandler {
 
   private static final ForgeConfigSpec.Builder COMMON_BUILDER = new ForgeConfigSpec.Builder();
-  private static ForgeConfigSpec.ConfigValue<List<String>> GROWABLE_BIOMES;
+  public static ForgeConfigSpec.ConfigValue<List<String>> GROWABLE_BIOMES;
+  public static ForgeConfigSpec.BooleanValue dropFailedGrowth;
+  public static ForgeConfigSpec.ConfigValue<List<String>> CROP_BIOMES;
   public static ForgeConfigSpec COMMON_CONFIG;
   private static final String[] mushrooms = new String[] {
       "minecraft:mushroom_fields"
@@ -97,7 +99,10 @@ public class ConfigHandler {
       , "minecraft:modified_wooded_badlands_plateau"
       , "minecraft:wooded_badlands_plateau"
   };
-  public static ForgeConfigSpec.BooleanValue dropFailedGrowth;
+  private static final String[] wheat = new String[] {
+      "minecraft:plains"
+      , "minecraft:swamp"
+  };
 
   static {
     initConfig();
@@ -115,8 +120,17 @@ public class ConfigHandler {
     configstuff.add(Blocks.DARK_OAK_SAPLING.getRegistryName().toString() + "->" + String.join(",", darkoak));
     configstuff.add(Blocks.JUNGLE_SAPLING.getRegistryName().toString() + "->" + String.join(",", jungle));
     //unsupported type: map
-    GROWABLE_BIOMES = COMMON_BUILDER.comment("Map growable block to CSV list of biomes no spaces, -> in between.  It SHOULD be fine to add modded saplings. An empty list means the sapling can gro nowhere.  Delete the key-entry for a sapling to let it grow everywhere.").define("MapBlockToBiomeList", configstuff);
+    GROWABLE_BIOMES = COMMON_BUILDER.comment("Map growable block to CSV list of biomes no spaces, -> in between.  It SHOULD be fine to add modded saplings. An empty list means the sapling can gro nowhere.  Delete the key-entry for a sapling to let it grow everywhere.")
+        .define("SaplingBlockToBiome", configstuff);
     dropFailedGrowth =COMMON_BUILDER.comment("Drop sapling item on failed growth").define("dropOnFailedGrow", true);
+
+    //
+    configstuff = new ArrayList<>();
+    configstuff.add(Blocks.WHEAT.getRegistryName().toString() + "->" + String.join(",", jungle));
+
+    CROP_BIOMES = COMMON_BUILDER.comment("Map growable block to CSV list of biomes no spaces, -> in between.  It SHOULD be fine to add modded saplings. An empty list means the sapling can gro nowhere.  Delete the key-entry for a sapling to let it grow everywhere.")
+        .define("CropBlockToBiome", configstuff);
+
     //YES: it is here actually
     COMMON_BUILDER.pop();
     COMMON_CONFIG = COMMON_BUILDER.build();
@@ -132,9 +146,10 @@ public class ConfigHandler {
     spec.setConfig(configData);
   }
 
-  public static Map<String, List<String>> getMapBiome() {
+
+  public static Map<String, List<String>> getMapBiome(ForgeConfigSpec.ConfigValue<List<String>> conf) {
     final Map<String, List<String>> mapInit = new HashMap<>();
-    for (String splitme : GROWABLE_BIOMES.get()) {
+    for (String splitme : conf.get()) {
       try {
         final String[] split = splitme.split("->");
         final String blockId = split[0];
@@ -145,7 +160,8 @@ public class ConfigHandler {
         //bad config sucks to be you
         ModSaplings.LOGGER.error("Error reading bad config value :" + splitme, e);
       }
-    }
+    }//TODO: DONT BE LAZY
+
     return mapInit;
   }
 }

@@ -12,6 +12,8 @@ import net.minecraft.world.IWorld;
 import net.minecraft.world.World;
 import net.minecraft.world.biome.Biome;
 import net.minecraftforge.event.world.SaplingGrowTreeEvent;
+import net.minecraftforge.event.world.BlockEvent.CropGrowEvent;
+import net.minecraftforge.event.world.BlockEvent.FluidPlaceBlockEvent;
 import net.minecraftforge.eventbus.api.Event;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 
@@ -21,7 +23,7 @@ public class SaplingDespawnGrowth {
   }
 
   private List<String> getBiomesForGrowth(Block block) {
-    Map<String, List<String>> mapInit = ConfigHandler.getMapBiome();
+    Map<String, List<String>> mapInit = ConfigHandler.getMapBiome(ConfigHandler.GROWABLE_BIOMES);
     String key = block.getRegistryName().toString();
     if (mapInit.containsKey(key) == false) {
       //null means no list set, so everything allowed
@@ -29,6 +31,13 @@ public class SaplingDespawnGrowth {
     }
     //my list is allowed
     return mapInit.get(key);
+  }
+
+  @SubscribeEvent
+  public void onCropGrowEvent(CropGrowEvent.Pre event) {
+    //     event.setCanceled(true);
+    ModSaplings.LOGGER.info("CropGrowEvent DENY ");
+    event.setResult(Event.Result.DENY);
   }
 
   @SubscribeEvent
@@ -40,12 +49,12 @@ public class SaplingDespawnGrowth {
     Biome biome = world.getBiome(pos);
     String biomeId = biome.getRegistryName().toString();
     List<String> allowed = this.getBiomesForGrowth(b);
-    if(allowed == null){
+    if (allowed == null) {
       //nothing listede for this sapling, evertyhings fine stop blocking the event
-      return ;
+      return;
     }
     treeAllowedToGrow = allowed.contains(biomeId);//from biome
-    ModSaplings.LOGGER.info(treeAllowedToGrow +" treeAllowedToGrow  "
+    ModSaplings.LOGGER.info(treeAllowedToGrow + " treeAllowedToGrow  "
         + biomeId + allowed.size());
     if (treeAllowedToGrow == false) {
       event.setResult(Event.Result.DENY);
@@ -56,12 +65,11 @@ public class SaplingDespawnGrowth {
         dropItemStackInWorld((World) world, pos, new ItemStack(b));
       }
     }// else a tree grew that was added by some mod
-
   }
+
   private static ItemEntity dropItemStackInWorld(World worldObj, BlockPos pos, ItemStack stack) {
     ItemEntity entityItem = new ItemEntity(worldObj, pos.getX(), pos.getY(), pos.getZ(), stack);
-    if (worldObj.isRemote == false){// do not spawn a second 'ghost' one on
-
+    if (worldObj.isRemote == false) {// do not spawn a second 'ghost' one on
       worldObj.addEntity(entityItem);
     }
     return entityItem;
