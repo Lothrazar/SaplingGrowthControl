@@ -97,6 +97,7 @@ public class ConfigHandler {
       , "minecraft:modified_wooded_badlands_plateau"
       , "minecraft:wooded_badlands_plateau"
   };
+  public static ForgeConfigSpec.BooleanValue dropFailedGrowth;
 
   static {
     initConfig();
@@ -115,6 +116,7 @@ public class ConfigHandler {
     configstuff.add(Blocks.JUNGLE_SAPLING.getRegistryName().toString() + "->" + String.join(",", jungle));
     //unsupported type: map
     GROWABLE_BIOMES = COMMON_BUILDER.comment("Map growable block to CSV list of biomes no spaces, -> in between.  It SHOULD be fine to add modded saplings. An empty list means the sapling can gro nowhere.  Delete the key-entry for a sapling to let it grow everywhere.").define("MapBlockToBiomeList", configstuff);
+    dropFailedGrowth =COMMON_BUILDER.comment("Drop sapling item on failed growth").define("dropOnFailedGrow", true);
     //YES: it is here actually
     COMMON_BUILDER.pop();
     COMMON_CONFIG = COMMON_BUILDER.build();

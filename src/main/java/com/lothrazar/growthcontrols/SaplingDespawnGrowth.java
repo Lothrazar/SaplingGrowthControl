@@ -1,5 +1,4 @@
 package com.lothrazar.growthcontrols;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -17,9 +16,6 @@ import net.minecraftforge.eventbus.api.Event;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 
 public class SaplingDespawnGrowth {
-
-  public static boolean drop_on_failed_growth = true;
-  public static boolean plantDespawningSaplings;
 
   public SaplingDespawnGrowth() {
   }
@@ -56,50 +52,16 @@ public class SaplingDespawnGrowth {
       // overwrite the sapling. - we could set to Air first, but dont
       // see much reason to
       world.setBlockState(pos, Blocks.DEAD_BUSH.getDefaultState(), 3);
-      if (drop_on_failed_growth) {
+      if (ConfigHandler.dropFailedGrowth.get()) {
         dropItemStackInWorld((World) world, pos, new ItemStack(b));
       }
     }// else a tree grew that was added by some mod
 
   }
-
-  //
-  //	@SubscribeEvent
-  //	public void onItemExpireEvent(ItemExpireEvent event) {
-  //		if (plantDespawningSaplings == false) {
-  //			return;
-  //		}
-  //
-  //		EntityItem entityItem = event.getEntityItem();
-  //		Entity entity = event.getEntity();
-  //		ItemStack is = entityItem.getEntityItem();
-  //		if (is == null) {
-  //			return;
-  //		}// has not happened in the wild, yet
-  //
-  //		Block blockhere = entity.worldObj.getBlockState(entityItem.getPosition()).getBlock();
-  //		Block blockdown = entity.worldObj.getBlockState(entityItem.getPosition().down()).getBlock();
-  //
-  //		if (blockhere == Blocks.air && blockdown == Blocks.dirt || // includes
-  //																	// podzol
-  //																	// and such
-  //		blockdown == Blocks.grass) {
-  //			// plant the sapling, replacing the air and on top of dirt/plantable
-  //
-  //			if (Block.getBlockFromItem(is.getItem()) == Blocks.sapling)
-  //				entity.worldObj.setBlockState(entityItem.getPosition(), Blocks.sapling.getStateFromMeta(is.getItemDamage()));
-  //			else if (Block.getBlockFromItem(is.getItem()) == Blocks.red_mushroom)
-  //				entity.worldObj.setBlockState(entityItem.getPosition(), Blocks.red_mushroom.getDefaultState());
-  //			else if (Block.getBlockFromItem(is.getItem()) == Blocks.brown_mushroom)
-  //				entity.worldObj.setBlockState(entityItem.getPosition(), Blocks.brown_mushroom.getDefaultState());
-  //
-  //		}
-  //	}
-
-  public static ItemEntity dropItemStackInWorld(World worldObj, BlockPos pos, ItemStack stack) {
+  private static ItemEntity dropItemStackInWorld(World worldObj, BlockPos pos, ItemStack stack) {
     ItemEntity entityItem = new ItemEntity(worldObj, pos.getX(), pos.getY(), pos.getZ(), stack);
-    if (worldObj.isRemote == false)// do not spawn a second 'ghost' one on
-    {
+    if (worldObj.isRemote == false){// do not spawn a second 'ghost' one on
+
       worldObj.addEntity(entityItem);
     }
     return entityItem;
