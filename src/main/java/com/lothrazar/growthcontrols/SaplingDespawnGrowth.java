@@ -28,8 +28,10 @@ public class SaplingDespawnGrowth {
     Map<String, List<String>> mapInit = ConfigHandler.getMapBiome();
     String key = block.getRegistryName().toString();
     if (mapInit.containsKey(key) == false) {
+      //null means no list set, so everything allowed
       return null;
     }
+    //my list is allowed
     return mapInit.get(key);
   }
 
@@ -42,6 +44,10 @@ public class SaplingDespawnGrowth {
     Biome biome = world.getBiome(pos);
     String biomeId = biome.getRegistryName().toString();
     List<String> allowed = this.getBiomesForGrowth(b);
+    if(allowed == null){
+      //nothing listede for this sapling, evertyhings fine stop blocking the event
+      return ;
+    }
     treeAllowedToGrow = allowed.contains(biomeId);//from biome
     ModSaplings.LOGGER.info(treeAllowedToGrow +" treeAllowedToGrow  "
         + biomeId + allowed.size());
