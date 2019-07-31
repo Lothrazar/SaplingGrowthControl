@@ -3,22 +3,21 @@ import com.electronwill.nightconfig.core.file.CommentedFileConfig;
 import com.electronwill.nightconfig.core.io.WritingMode;
 //import com.lothrazar.examplemod.ExampleMod;
 import com.lothrazar.growthcontrols.ModSaplings;
+import net.minecraft.block.Blocks;
 import net.minecraftforge.common.ForgeConfigSpec;
 
 import java.nio.file.Path;
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class ConfigHandler {
 
   private static final ForgeConfigSpec.Builder COMMON_BUILDER = new ForgeConfigSpec.Builder();
+  private static ForgeConfigSpec.ConfigValue<List<String>> GROWABLE_BIOMES;
   public static ForgeConfigSpec COMMON_CONFIG;
-  public static ForgeConfigSpec.ConfigValue<List<String>> OAK_BIOMES;
-  public static ForgeConfigSpec.ConfigValue<List<String>> BIRCH_BIOMES;
-  public static ForgeConfigSpec.ConfigValue<List<String>> SPRUCE_BIOMES;
-  public static ForgeConfigSpec.ConfigValue<List<String>> ACACIA_BIOMES;
-  public static ForgeConfigSpec.ConfigValue<List<String>> JUNGLE_BIOMES;
-  public static ForgeConfigSpec.ConfigValue<List<String>> DARKOAK_BIOMES;
   private static final String[] mushrooms = new String[] {
       "minecraft:mushroom_fields"
       , "minecraft:mushroom_field_shore"
@@ -106,17 +105,20 @@ public class ConfigHandler {
   private static void initConfig() {
     //TODO: reverse allcapas and finalstatic
     COMMON_BUILDER.comment("General settings").push(ModSaplings.MODID);
-    //    OAK_BIOMES = COMMON_BUILDER.comment("Testing config Tooltip").define("itemTooltip", true);
-    OAK_BIOMES = COMMON_BUILDER.comment("List of biomes for sapling").define("minecraft:oak_sapling", Arrays.asList(oak));
-    BIRCH_BIOMES = COMMON_BUILDER.comment("List of biomes for sapling").define("minecraft:birch_sapling", Arrays.asList(birch));
-    SPRUCE_BIOMES = COMMON_BUILDER.comment("List of biomes for sapling").define("minecraft:spruce_sapling", Arrays.asList(spruce));
-    JUNGLE_BIOMES = COMMON_BUILDER.comment("List of biomes for sapling").define("minecraft:jungle_sapling", Arrays.asList(jungle));
-    ACACIA_BIOMES = COMMON_BUILDER.comment("List of biomes for sapling").define("minecraft:acacia_sapling", Arrays.asList(acacia));
-    DARKOAK_BIOMES = COMMON_BUILDER.comment("List of biomes for sapling").define("minecraft:darkoak_sapling", Arrays.asList(darkoak));
+    System.out.println(Blocks.BIRCH_SAPLING.getRegistryName().toString());
+    List<String> configstuff = new ArrayList<>();
+    configstuff.add(Blocks.ACACIA_SAPLING.getRegistryName().toString() + "->" + String.join(",", acacia));
+    configstuff.add(Blocks.BIRCH_SAPLING.getRegistryName().toString() + "->" + String.join(",", birch));
+    configstuff.add(Blocks.SPRUCE_SAPLING.getRegistryName().toString() + "->" + String.join(",", spruce));
+    configstuff.add(Blocks.OAK_SAPLING.getRegistryName().toString() + "->" + String.join(",", oak));
+    configstuff.add(Blocks.DARK_OAK_SAPLING.getRegistryName().toString() + "->" + String.join(",", darkoak));
+    configstuff.add(Blocks.JUNGLE_SAPLING.getRegistryName().toString() + "->" + String.join(",", jungle));
+    //unsupported type: map
+    GROWABLE_BIOMES = COMMON_BUILDER.comment("Map growable block to CSV list of biomes no spaces, -> in between").define("MapBlockToBiomeList", configstuff);
+    //YES: it is here actually
     COMMON_BUILDER.pop();
     COMMON_CONFIG = COMMON_BUILDER.build();
   }
-
 
   public static void loadConfig(ForgeConfigSpec spec, Path path) {
     final CommentedFileConfig configData = CommentedFileConfig.builder(path)
@@ -126,5 +128,22 @@ public class ConfigHandler {
         .build();
     configData.load();
     spec.setConfig(configData);
+  }
+
+  public static Map<String, List<String>> getMapBiome() {
+    final Map<String, List<String>> mapInit = new HashMap<>();
+    for (String splitme : GROWABLE_BIOMES.get()) {
+      try {
+        final String[] split = splitme.split("->");
+        final String blockId = split[0];
+        final String[] biomes = split[1].split(",");
+        mapInit.put(blockId, Arrays.asList(biomes));
+      }
+      catch (Exception e) {
+        //bad config sucks to be you
+        ModSaplings.LOGGER.error("Error reading bad config value :" + splitme, e);
+      }
+    }
+    return mapInit;
   }
 }

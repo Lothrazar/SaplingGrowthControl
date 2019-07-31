@@ -25,14 +25,7 @@ public class SaplingDespawnGrowth {
   }
 
   private List<String> getBiomesForGrowth(Block block) {
-    //TODO: map
-    Map<String, List<String>> mapInit = new HashMap<>();
-    mapInit.put(Blocks.ACACIA_SAPLING.getRegistryName().toString(), ConfigHandler.ACACIA_BIOMES.get());
-    mapInit.put(Blocks.BIRCH_SAPLING.getRegistryName().toString(), ConfigHandler.BIRCH_BIOMES.get());
-    mapInit.put(Blocks.SPRUCE_SAPLING.getRegistryName().toString(), ConfigHandler.SPRUCE_BIOMES.get());
-    mapInit.put(Blocks.OAK_SAPLING.getRegistryName().toString(), ConfigHandler.OAK_BIOMES.get());
-    mapInit.put(Blocks.DARK_OAK_SAPLING.getRegistryName().toString(), ConfigHandler.DARKOAK_BIOMES.get());
-    mapInit.put(Blocks.JUNGLE_SAPLING.getRegistryName().toString(), ConfigHandler.JUNGLE_BIOMES.get());
+    Map<String, List<String>> mapInit = ConfigHandler.getMapBiome();
     String key = block.getRegistryName().toString();
     if (mapInit.containsKey(key) == false) {
       return null;
