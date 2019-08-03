@@ -5,17 +5,22 @@ import java.util.Map;
 
 import com.lothrazar.growthcontrols.setup.ConfigHandler;
 import net.minecraft.block.Block;
+import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
 import net.minecraft.block.IGrowable;
 import net.minecraft.entity.item.ItemEntity;
+import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
+import net.minecraft.item.Items;
 import net.minecraft.particles.ParticleTypes;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraft.world.IWorld;
 import net.minecraft.world.World;
 import net.minecraft.world.biome.Biome;
 import net.minecraftforge.common.ForgeConfigSpec;
 import net.minecraftforge.event.entity.player.BonemealEvent;
+import net.minecraftforge.event.entity.player.PlayerInteractEvent;
 import net.minecraftforge.event.world.SaplingGrowTreeEvent;
 import net.minecraftforge.event.world.BlockEvent.CropGrowEvent;
 import net.minecraftforge.eventbus.api.Event;
@@ -38,6 +43,34 @@ public class SaplingDespawnGrowth {
   }
 
   @SubscribeEvent
+  public void onUse(PlayerInteractEvent.RightClickBlock event) {
+    //    ModSaplings.LOGGER.info( "RightClickBlockRightClickBlock GOT ");
+    String msg = "";
+    Biome biome = event.getWorld().getBiome(event.getPos());
+    BlockState st = event.getWorld().getBlockState(event.getPos());
+    List<String> crops = this.getBiomesForGrowth(st.getBlock(), ConfigHandler.CROP_BIOMES);
+    List<String> saplings = this.getBiomesForGrowth(st.getBlock(), ConfigHandler.GROWABLE_BIOMES);\
+    String strBlock = st.getBlock().getRegistryName().toString();
+    if (crops != null) {
+      msg = "!" + biome.getRegistryName() + "[C]" + strBlock + String.join("," + crops);
+      this.chatMessage(event.getEntityPlayer(), msg);
+    }
+    if (saplings != null) {
+      msg = "!" + biome.getRegistryName() + "[S]" + strBlock + String.join("," + saplings);
+      this.chatMessage(event.getEntityPlayer(), msg);
+    }
+    //    else
+    //      this.chatMessage(event.getEntityPlayer(), "everywhere" + st.getBlock().getRegistryName());
+  }
+
+  public void chatMessage(PlayerEntity player, String message) {
+    ModSaplings.LOGGER.info(message + "CHAT GOT " + message);
+    // if (player.world.isRemote) {
+    player.sendMessage(new TranslationTextComponent((message)));
+    // }
+  }
+
+  @SubscribeEvent
   public void onCropGrowEvent(CropGrowEvent.Pre event) {
     //     event.setCanceled(true);
     IWorld world = event.getWorld();
@@ -46,12 +79,12 @@ public class SaplingDespawnGrowth {
     Biome biome = world.getBiome(pos);
     List<String> allowed = this.getBiomesForGrowth(b, ConfigHandler.CROP_BIOMES);
     ModSaplings.LOGGER.info(b + "test size    " + allowed);
-    if (allowed==null) {
+    if (allowed == null) {
       //nothing listede for this sapling, evertyhings fine stop blocking the event
       return;
     }
     String biomeId = biome.getRegistryName().toString();
-    boolean allowedToGrow = allowed.contains(biomeId);//from biome
+    boolean allowedToGrow = UtilString.isInList(allowed, biome.getRegistryName());
     if (allowedToGrow == false) {
       ModSaplings.LOGGER.info("CropGrowEvent DENY " + biomeId + b);
       event.setResult(Event.Result.DENY);
@@ -67,11 +100,11 @@ public class SaplingDespawnGrowth {
     Biome biome = world.getBiome(pos);
     String biomeId = biome.getRegistryName().toString();
     List<String> allowed = this.getBiomesForGrowth(b, ConfigHandler.GROWABLE_BIOMES);
-    if (allowed==null ) {
+    if (allowed == null) {
       //nothing listede for this sapling, evertyhings fine stop blocking the event
       return;
     }
-    boolean treeAllowedToGrow = allowed.contains(biomeId);//from biome
+    boolean treeAllowedToGrow = UtilString.isInList(allowed, biome.getRegistryName());
     ModSaplings.LOGGER.info(treeAllowedToGrow + " treeAllowedToGrow  "
         + biomeId + allowed.size());
     if (treeAllowedToGrow == false) {
@@ -89,18 +122,16 @@ public class SaplingDespawnGrowth {
     World world = event.getWorld();
     BlockPos pos = event.getPos();
     Block b = world.getBlockState(pos).getBlock();
-
-//    if(b instanceof IGrowable == false || world.getBlockState(pos).isSolid()){
-//      return;//non solid blocks etc
-//    }
+    //    if(b instanceof IGrowable == false || world.getBlockState(pos).isSolid()){
+    //      return;//non solid blocks etc
+    //    }
     Biome biome = world.getBiome(pos);
     String biomeId = biome.getRegistryName().toString();
     //only block bonemeal, IF we find the block in here
     List<String> crops = this.getBiomesForGrowth(b, ConfigHandler.CROP_BIOMES);
     List<String> saplings = this.getBiomesForGrowth(b, ConfigHandler.GROWABLE_BIOMES);
-    boolean allowedCrop = crops == null || crops.contains(biome);
-    boolean allowedSa = saplings == null || saplings.contains(biome);
-
+    boolean allowedCrop = crops == null || UtilString.isInList(crops, biome.getRegistryName());
+    boolean allowedSa = saplings == null || UtilString.isInList(saplings, biome.getRegistryName());
     if (!allowedCrop || !allowedSa) {
       event.setCanceled(true);
       event.setResult(Event.Result.DENY);
@@ -124,80 +155,79 @@ public class SaplingDespawnGrowth {
     }
   }
   //exisitng list of 75 original
-//  minecraft:ocean
-//  minecraft:plains
-//  minecraft:desert
-//  minecraft:mountains
-//  minecraft:forest
-//  minecraft:taiga
-//  minecraft:swamp
-//  minecraft:river
-//  minecraft:nether
-//  minecraft:the_end
-//  minecraft:frozen_ocean
-//  minecraft:frozen_river
-//  minecraft:snowy_tundra
-//  minecraft:snowy_mountains
-//  minecraft:mushroom_fields
-//  minecraft:mushroom_field_shore
-//  minecraft:beach
-//  minecraft:desert_hills
-//  minecraft:wooded_hills
-//  minecraft:taiga_hills
-//  minecraft:mountain_edge
-//  minecraft:jungle
-//  minecraft:jungle_hills
-//  minecraft:jungle_edge
-//  minecraft:deep_ocean
-//  minecraft:stone_shore
-//  minecraft:snowy_beach
-//  minecraft:birch_forest
-//  minecraft:birch_forest_hills
-//  minecraft:dark_forest
-//  minecraft:snowy_taiga
-//  minecraft:snowy_taiga_hills
-//  minecraft:giant_tree_taiga
-//  minecraft:giant_tree_taiga_hills
-//  minecraft:wooded_mountains
-//  minecraft:savanna
-//  minecraft:savanna_plateau
-//  minecraft:badlands
-//  minecraft:wooded_badlands_plateau
-//  minecraft:badlands_plateau
-//  minecraft:small_end_islands
-//  minecraft:end_midlands
-//  minecraft:end_highlands
-//  minecraft:end_barrens
-//  minecraft:warm_ocean
-//  minecraft:lukewarm_ocean
-//  minecraft:cold_ocean
-//  minecraft:deep_warm_ocean
-//  minecraft:deep_lukewarm_ocean
-//  minecraft:deep_cold_ocean
-//  minecraft:deep_frozen_ocean
-//  minecraft:the_void
-//  minecraft:sunflower_plains
-//  minecraft:desert_lakes
-//  minecraft:gravelly_mountains
-//  minecraft:flower_forest
-//  minecraft:taiga_mountains
-//  minecraft:swamp_hills
-//  minecraft:ice_spikes
-//  minecraft:modified_jungle
-//  minecraft:modified_jungle_edge
-//  minecraft:tall_birch_forest
-//  minecraft:tall_birch_hills
-//  minecraft:dark_forest_hills
-//  minecraft:snowy_taiga_mountains
-//  minecraft:giant_spruce_taiga
-//  minecraft:giant_spruce_taiga_hills
-//  minecraft:modified_gravelly_mountains
-//  minecraft:shattered_savanna
-//  minecraft:shattered_savanna_plateau
-//  minecraft:eroded_badlands
-//  minecraft:modified_wooded_badlands_plateau
-//  minecraft:modified_badlands_plateau
-//  minecraft:bamboo_jungle
-//  minecraft:bamboo_jungle_hills
-
+  //  minecraft:ocean
+  //  minecraft:plains
+  //  minecraft:desert
+  //  minecraft:mountains
+  //  minecraft:forest
+  //  minecraft:taiga
+  //  minecraft:swamp
+  //  minecraft:river
+  //  minecraft:nether
+  //  minecraft:the_end
+  //  minecraft:frozen_ocean
+  //  minecraft:frozen_river
+  //  minecraft:snowy_tundra
+  //  minecraft:snowy_mountains
+  //  minecraft:mushroom_fields
+  //  minecraft:mushroom_field_shore
+  //  minecraft:beach
+  //  minecraft:desert_hills
+  //  minecraft:wooded_hills
+  //  minecraft:taiga_hills
+  //  minecraft:mountain_edge
+  //  minecraft:jungle
+  //  minecraft:jungle_hills
+  //  minecraft:jungle_edge
+  //  minecraft:deep_ocean
+  //  minecraft:stone_shore
+  //  minecraft:snowy_beach
+  //  minecraft:birch_forest
+  //  minecraft:birch_forest_hills
+  //  minecraft:dark_forest
+  //  minecraft:snowy_taiga
+  //  minecraft:snowy_taiga_hills
+  //  minecraft:giant_tree_taiga
+  //  minecraft:giant_tree_taiga_hills
+  //  minecraft:wooded_mountains
+  //  minecraft:savanna
+  //  minecraft:savanna_plateau
+  //  minecraft:badlands
+  //  minecraft:wooded_badlands_plateau
+  //  minecraft:badlands_plateau
+  //  minecraft:small_end_islands
+  //  minecraft:end_midlands
+  //  minecraft:end_highlands
+  //  minecraft:end_barrens
+  //  minecraft:warm_ocean
+  //  minecraft:lukewarm_ocean
+  //  minecraft:cold_ocean
+  //  minecraft:deep_warm_ocean
+  //  minecraft:deep_lukewarm_ocean
+  //  minecraft:deep_cold_ocean
+  //  minecraft:deep_frozen_ocean
+  //  minecraft:the_void
+  //  minecraft:sunflower_plains
+  //  minecraft:desert_lakes
+  //  minecraft:gravelly_mountains
+  //  minecraft:flower_forest
+  //  minecraft:taiga_mountains
+  //  minecraft:swamp_hills
+  //  minecraft:ice_spikes
+  //  minecraft:modified_jungle
+  //  minecraft:modified_jungle_edge
+  //  minecraft:tall_birch_forest
+  //  minecraft:tall_birch_hills
+  //  minecraft:dark_forest_hills
+  //  minecraft:snowy_taiga_mountains
+  //  minecraft:giant_spruce_taiga
+  //  minecraft:giant_spruce_taiga_hills
+  //  minecraft:modified_gravelly_mountains
+  //  minecraft:shattered_savanna
+  //  minecraft:shattered_savanna_plateau
+  //  minecraft:eroded_badlands
+  //  minecraft:modified_wooded_badlands_plateau
+  //  minecraft:modified_badlands_plateau
+  //  minecraft:bamboo_jungle
+  //  minecraft:bamboo_jungle_hills
 }
