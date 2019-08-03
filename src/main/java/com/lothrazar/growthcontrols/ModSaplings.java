@@ -36,10 +36,7 @@ public class ModSaplings {
   }
 
   private void setup(final FMLCommonSetupEvent event) {
-    for (Biome b : Biome.BIOMES) {
-      LOGGER.info("\"" + b.getRegistryName().toString() + "\"");
     }
-  }
 
   @SubscribeEvent
   public static void onFingerprintViolation(FMLFingerprintViolationEvent event) {
