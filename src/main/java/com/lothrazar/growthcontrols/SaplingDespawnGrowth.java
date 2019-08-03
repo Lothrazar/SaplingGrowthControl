@@ -44,35 +44,39 @@ public class SaplingDespawnGrowth {
 
   @SubscribeEvent
   public void onUse(PlayerInteractEvent.RightClickBlock event) {
-    //    ModSaplings.LOGGER.info( "RightClickBlockRightClickBlock GOT ");
+    if (event.getItemStack().getItem() != Items.STICK ||
+        event.getEntityPlayer().isSneaking() == false) {
+      //if im not holding a stick, OR im not sneaking, halt
+      return;
+    }//else i am holding a stick AND am sneaking
     String msg = "";
     Biome biome = event.getWorld().getBiome(event.getPos());
     BlockState st = event.getWorld().getBlockState(event.getPos());
     List<String> crops = this.getBiomesForGrowth(st.getBlock(), ConfigHandler.CROP_BIOMES);
-    List<String> saplings = this.getBiomesForGrowth(st.getBlock(), ConfigHandler.GROWABLE_BIOMES);\
+    List<String> saplings = this.getBiomesForGrowth(st.getBlock(), ConfigHandler.GROWABLE_BIOMES);
     String strBlock = st.getBlock().getRegistryName().toString();
     if (crops != null) {
-      msg = "!" + biome.getRegistryName() + "[C]" + strBlock + String.join("," + crops);
+      //"!" + biome.getRegistryName() + "[C]" + strBlock
+      msg = "allowedin.crops"+ "|" + crops.size() + "|" + String.join(",", crops);
       this.chatMessage(event.getEntityPlayer(), msg);
     }
     if (saplings != null) {
-      msg = "!" + biome.getRegistryName() + "[S]" + strBlock + String.join("," + saplings);
+      msg = "allowedin.saplings"+ "|" + saplings.size() + "|" + String.join(",", saplings);
       this.chatMessage(event.getEntityPlayer(), msg);
     }
     //    else
     //      this.chatMessage(event.getEntityPlayer(), "everywhere" + st.getBlock().getRegistryName());
   }
 
-  public void chatMessage(PlayerEntity player, String message) {
+  void chatMessage(PlayerEntity player, String message) {
     ModSaplings.LOGGER.info(message + "CHAT GOT " + message);
-    // if (player.world.isRemote) {
-    player.sendMessage(new TranslationTextComponent((message)));
-    // }
+    if (player.world.isRemote) {
+      player.sendMessage(new TranslationTextComponent((message)));
+    }
   }
 
   @SubscribeEvent
   public void onCropGrowEvent(CropGrowEvent.Pre event) {
-    //     event.setCanceled(true);
     IWorld world = event.getWorld();
     BlockPos pos = event.getPos();
     Block b = world.getBlockState(pos).getBlock();
