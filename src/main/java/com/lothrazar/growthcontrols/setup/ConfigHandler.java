@@ -102,8 +102,36 @@ public class ConfigHandler {
   private static final String[] wheat = new String[] {
       "minecraft:plains"
       , "minecraft:swamp"
+      , "minecraft:beach"
+  };
+  private static final String[] netherwart = new String[] {
+        "minecraft:nether"
   };
 
+  private static final String[] potatoes =   new String[] {
+    "minecraft:taiga"
+        , "minecraft:giant_tree_taiga"
+        , "minecraft:snowy_tundra"
+        , "minecraft:taiga_hills"
+        , "minecraft:snowy_taiga"
+        , "minecraft:snowy_taiga_hills"
+        , "minecraft:giant_tree_taiga_hills" };
+  private static final String[] beetroot = new String[] {
+      "minecraft:taiga"
+      , "minecraft:giant_tree_taiga"
+      , "minecraft:snowy_tundra"
+      , "minecraft:taiga_hills"
+      , "minecraft:snowy_taiga"
+      , "minecraft:snowy_taiga_hills"
+      , "minecraft:giant_tree_taiga_hills" };
+  private static final String[] carrots = new String[] {
+      "minecraft:taiga"
+      , "minecraft:giant_tree_taiga"
+      , "minecraft:snowy_tundra"
+      , "minecraft:taiga_hills"
+      , "minecraft:snowy_taiga"
+      , "minecraft:snowy_taiga_hills"
+      , "minecraft:giant_tree_taiga_hills" };
   static {
     initConfig();
   }
@@ -122,11 +150,14 @@ public class ConfigHandler {
     //unsupported type: map
     GROWABLE_BIOMES = COMMON_BUILDER.comment("Map growable block to CSV list of biomes no spaces, -> in between.  It SHOULD be fine to add modded saplings. An empty list means the sapling can gro nowhere.  Delete the key-entry for a sapling to let it grow everywhere.")
         .define("SaplingBlockToBiome", configstuff);
-    dropFailedGrowth =COMMON_BUILDER.comment("Drop sapling item on failed growth").define("dropOnFailedGrow", true);
+    dropFailedGrowth = COMMON_BUILDER.comment("Drop sapling item on failed growth").define("dropOnFailedGrow", true);
 
     //
     configstuff = new ArrayList<>();
-    configstuff.add(Blocks.WHEAT.getRegistryName().toString() + "->" + String.join(",", jungle));
+    configstuff.add(Blocks.WHEAT.getRegistryName().toString() + "->" + String.join(",", wheat));
+    configstuff.add(Blocks.CARROTS.getRegistryName().toString() + "->" + String.join(",", carrots));
+    configstuff.add(Blocks.POTATOES.getRegistryName().toString() + "->" + String.join(",", potatoes));
+    configstuff.add(Blocks.BEETROOTS.getRegistryName().toString() + "->" + String.join(",", beetroot));
 
     CROP_BIOMES = COMMON_BUILDER.comment("Map growable block to CSV list of biomes no spaces, -> in between.  It SHOULD be fine to add modded saplings. An empty list means the sapling can gro nowhere.  Delete the key-entry for a sapling to let it grow everywhere.")
         .define("CropBlockToBiome", configstuff);
