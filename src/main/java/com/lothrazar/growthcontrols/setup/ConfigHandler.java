@@ -21,37 +21,38 @@ public class ConfigHandler {
   private static ForgeConfigSpec.BooleanValue dropFailedGrowth;
   public static ForgeConfigSpec.ConfigValue<List<String>> CROP_BIOMES;
   public static ForgeConfigSpec COMMON_CONFIG;
-  public static boolean getdropFailedGrowth(){
+
+  public static boolean getdropFailedGrowth() {
     return dropFailedGrowth.get();
   }
-//  private static final String[] badlands = new String[] {
-//      "minecraft:eroded_badlands"
-//      , "minecraft:modified_wooded_badlands_plateau"
-//      , "minecraft:modified_badlands_plateau"
-//      , "minecraft:badlands"
-//      , "minecraft:wooded_badlands_plateau"
-//      , "minecraft:badlands_plateau"
-//  };
-//  private static final String[] oceans = new String[] {
-//      "minecraft:ocean"
-//      , "minecraft:river"
-//      , "minecraft:frozen_ocean"
-//      , "minecraft:frozen_river"
-//      , "minecraft:beach"
-//      , "minecraft:deep_ocean"
-//      , "minecraft:warm_ocean"
-//      , "minecraft:lukewarm_ocean"
-//      , "minecraft:cold_ocean"
-//      , "minecraft:deep_warm_ocean"
-//      , "minecraft:deep_lukewarm_ocean"
-//      , "minecraft:deep_cold_ocean"
-//      , "minecraft:deep_frozen_ocean"
-//  };
+
+  //  private static final String[] badlands = new String[] {
+  //      "minecraft:eroded_badlands"
+  //      , "minecraft:modified_wooded_badlands_plateau"
+  //      , "minecraft:modified_badlands_plateau"
+  //      , "minecraft:badlands"
+  //      , "minecraft:wooded_badlands_plateau"
+  //      , "minecraft:badlands_plateau"
+  //  };
+  //  private static final String[] oceans = new String[] {
+  //      "minecraft:ocean"
+  //      , "minecraft:river"
+  //      , "minecraft:frozen_ocean"
+  //      , "minecraft:frozen_river"
+  //      , "minecraft:beach"
+  //      , "minecraft:deep_ocean"
+  //      , "minecraft:warm_ocean"
+  //      , "minecraft:lukewarm_ocean"
+  //      , "minecraft:cold_ocean"
+  //      , "minecraft:deep_warm_ocean"
+  //      , "minecraft:deep_lukewarm_ocean"
+  //      , "minecraft:deep_cold_ocean"
+  //      , "minecraft:deep_frozen_ocean"
+  //  };
   private static final String[] netherwart = new String[] {
       "minecraft:nether"
       , "minecraft:hell"
   };
-
   //"minecraft:extreme_*"
   //"minecraft:mesa_*" // and "mesa"
   //  Beets (Beta vulgaris) are a cool-season, root vegetable, which means they grow in the cool weather of spring and fall.
@@ -63,10 +64,9 @@ public class ConfigHandler {
   private static void initConfig() {
     //TODO: reverse allcapas and finalstatic
     COMMON_BUILDER.comment("General settings").push(ModSaplings.MODID);
-  //
+    //
     dropFailedGrowth = COMMON_BUILDER.comment("Drop sapling item on failed growth").define("dropOnFailedGrow", true);
-//
-
+    //
     List<String> configstuff = new ArrayList<>();
     configstuff.add(Blocks.ACACIA_SAPLING.getRegistryName().toString() + DELIM + String.join(",", new String[] {
         "minecraft:savanna"
@@ -76,13 +76,13 @@ public class ConfigHandler {
         , "minecraft:modified_wooded_badlands_plateau"
         , "minecraft:wooded_badlands_plateau"
     }));
-    configstuff.add(Blocks.BIRCH_SAPLING.getRegistryName().toString() + DELIM + String.join(",",  new String[] {
+    configstuff.add(Blocks.BIRCH_SAPLING.getRegistryName().toString() + DELIM + String.join(",", new String[] {
         "minecraft:birch_forest"
         , "minecraft:forest"
         , "minecraft:birch_forest_hills"
         , "minecraft:tall_birch_forest"
         , "minecraft:tall_birch_hills" }));
-    configstuff.add(Blocks.SPRUCE_SAPLING.getRegistryName().toString() + DELIM + String.join(",",  new String[] {
+    configstuff.add(Blocks.SPRUCE_SAPLING.getRegistryName().toString() + DELIM + String.join(",", new String[] {
         "minecraft:taiga"
         , "minecraft:giant_tree_taiga"
         , "minecraft:snowy_tundra"
@@ -116,9 +116,9 @@ public class ConfigHandler {
     //unsupported type: map
     GROWABLE_BIOMES = COMMON_BUILDER.comment("Map growable block to CSV list of biomes no spaces, -> in between.  It SHOULD be fine to add modded saplings. An empty list means the sapling can gro nowhere.  Delete the key-entry for a sapling to let it grow everywhere.")
         .define("SaplingBlockToBiome", configstuff);
-     //
+    //
     configstuff = new ArrayList<>();
-    configstuff.add(Blocks.WHEAT.getRegistryName().toString() + DELIM + String.join(",",  new String[] {
+    configstuff.add(Blocks.WHEAT.getRegistryName().toString() + DELIM + String.join(",", new String[] {
         "minecraft:plains"
         , "minecraft:swamp"
         , "minecraft:beach"
@@ -147,7 +147,7 @@ public class ConfigHandler {
         , "minecraft:swamp"
         , "minecraft:flower_forest"
         , "minecraft:birch_forest"
-        , "minecraft:birch_forest_hills"
+        , "minecraft:birch_*"
         , "minecraft:tall_birch_forest"
         , "minecraft:tall_birch_hills"
         , "minecraft:dark_forest"
@@ -156,16 +156,49 @@ public class ConfigHandler {
         , "minecraft:dark_forest_hills"
     }));
     final String[] mushrooms = new String[] {
-        "minecraft:mushroom_fields"
+        "minecraft:mushroom_*"
         , "minecraft:mushroom_field_shore"
         , "minecraft:nether"
         , "minecraft:small_end_islands"
-        , "minecraft:end_midlands"
-        , "minecraft:end_highlands"
-        , "minecraft:end_barrens"
+        , "minecraft:end_*"
         , "minecraft:the_end"
         , "minecraft:the_void"
     };
+    configstuff.add(Blocks.BROWN_MUSHROOM.getRegistryName().toString() + DELIM + String.join(",", mushrooms));
+    configstuff.add(Blocks.RED_MUSHROOM.getRegistryName().toString() + DELIM + String.join(",", mushrooms));
+    configstuff.add(Blocks.COCOA.getRegistryName().toString() + DELIM + String.join(",",
+        new String[] {
+            "minecraft:jungle_edge"
+            , "minecraft:jungle"
+            , "minecraft:jungle_hills"
+            , "minecraft:modified_jungle"
+            , "minecraft:bamboo_jungle"
+            , "minecraft:bamboo_jungle_hills"
+            , "minecraft:modified_jungle_edge"
+            , "minecraft:modified_jungle" }
+    ));
+    configstuff.add(Blocks.MELON_STEM.getRegistryName().toString() + DELIM + String.join(",",
+        new String[] {
+             "minecraft:jungle"
+            , "minecraft:jungle_*"
+            , "minecraft:modified_jungle"
+            , "minecraft:bamboo_jungle"
+            , "minecraft:bamboo_jungle_hills"
+            , "minecraft:modified_jungle_edge"
+            , "minecraft:modified_jungle" }
+    ));
+    configstuff.add(Blocks.PUMPKIN_STEM.getRegistryName().toString() + DELIM + String.join(",",
+        new String[] {
+
+            "minecraft:taiga"
+            , "minecraft:snowy_*"
+            , "minecraft:taiga_*"
+            , "minecraft:*_forest"
+            , "minecraft:dark_forest_hills"
+            , "minecraft:*_taiga"
+            , "minecraft:*_mountains"
+            , "minecraft:giant_tree_taiga_hills"}
+    ));
     CROP_BIOMES = COMMON_BUILDER.comment("Map growable block to CSV list of biomes no spaces, -> in between.  It SHOULD be fine to add modded saplings. An empty list means the sapling can gro nowhere.  Delete the key-entry for a sapling to let it grow everywhere.")
         .define("CropBlockToBiome", configstuff);
     //YES: it is here actually

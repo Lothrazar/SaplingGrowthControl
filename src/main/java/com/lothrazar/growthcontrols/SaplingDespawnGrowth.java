@@ -50,18 +50,18 @@ public class SaplingDespawnGrowth {
       return;
     }//else i am holding a stick AND am sneaking
     String msg = "";
-    Biome biome = event.getWorld().getBiome(event.getPos());
+ //   Biome biome = event.getWorld().getBiome(event.getPos());
     BlockState st = event.getWorld().getBlockState(event.getPos());
     List<String> crops = this.getBiomesForGrowth(st.getBlock(), ConfigHandler.CROP_BIOMES);
     List<String> saplings = this.getBiomesForGrowth(st.getBlock(), ConfigHandler.GROWABLE_BIOMES);
-    String strBlock = st.getBlock().getRegistryName().toString();
+   // String strBlock = st.getBlock().getRegistryName().toString();
     if (crops != null) {
       //"!" + biome.getRegistryName() + "[C]" + strBlock
-      msg = "allowedin.crops"+ "|" + crops.size() + "|" + String.join(",", crops);
+      msg = lang("allowedin.crops")+ " | " + String.join(" , ", crops);
       this.chatMessage(event.getEntityPlayer(), msg);
     }
     if (saplings != null) {
-      msg = "allowedin.saplings"+ "|" + saplings.size() + "|" + String.join(",", saplings);
+      msg =lang( "allowedin.saplings")+ " | " + String.join(" , ", saplings);
       this.chatMessage(event.getEntityPlayer(), msg);
     }
     //    else
@@ -69,12 +69,16 @@ public class SaplingDespawnGrowth {
   }
 
   void chatMessage(PlayerEntity player, String message) {
-    ModSaplings.LOGGER.info(message + "CHAT GOT " + message);
     if (player.world.isRemote) {
-      player.sendMessage(new TranslationTextComponent((message)));
+      player.sendMessage(new TranslationTextComponent("=="));
+      player.sendMessage(new TranslationTextComponent(message));
     }
   }
 
+  public   String lang(String message) {
+    TranslationTextComponent t = new TranslationTextComponent(message);
+    return t.getFormattedText();
+  }
   @SubscribeEvent
   public void onCropGrowEvent(CropGrowEvent.Pre event) {
     IWorld world = event.getWorld();
