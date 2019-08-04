@@ -53,8 +53,6 @@ public class ConfigHandler {
       "minecraft:nether"
       , "minecraft:hell"
   };
-  //"minecraft:extreme_*"
-  //"minecraft:mesa_*" // and "mesa"
   //  Beets (Beta vulgaris) are a cool-season, root vegetable, which means they grow in the cool weather of spring and fall.
 
   static {
@@ -159,6 +157,8 @@ public class ConfigHandler {
         "minecraft:mushroom_*"
         , "minecraft:mushroom_field_shore"
         , "minecraft:nether"
+        , "minecraft:mesa_*"
+        , "minecraft:mesa"
         , "minecraft:small_end_islands"
         , "minecraft:end_*"
         , "minecraft:the_end"
@@ -179,7 +179,23 @@ public class ConfigHandler {
     ));
     configstuff.add(Blocks.MELON_STEM.getRegistryName().toString() + DELIM + String.join(",",
         new String[] {
-             "minecraft:jungle"
+            "minecraft:ocean"
+            , "minecraft:mesa_*"
+            , "minecraft:mesa"
+            , "minecraft:*_ocean"
+            , "minecraft:river"
+            , "minecraft:frozen_ocean"
+            , "minecraft:frozen_river"
+            , "minecraft:beach"
+            , "minecraft:deep_ocean"
+            , "minecraft:warm_ocean"
+            , "minecraft:lukewarm_ocean"
+            , "minecraft:cold_ocean"
+            , "minecraft:deep_warm_ocean"
+            , "minecraft:deep_lukewarm_ocean"
+            , "minecraft:deep_cold_ocean"
+            , "minecraft:deep_frozen_ocean"
+            , "minecraft:jungle"
             , "minecraft:jungle_*"
             , "minecraft:modified_jungle"
             , "minecraft:bamboo_jungle"
@@ -189,15 +205,14 @@ public class ConfigHandler {
     ));
     configstuff.add(Blocks.PUMPKIN_STEM.getRegistryName().toString() + DELIM + String.join(",",
         new String[] {
-
-            "minecraft:taiga"
+            "minecraft:extreme_*"
+            // // and "mesa"
+            , "minecraft:taiga"
             , "minecraft:snowy_*"
             , "minecraft:taiga_*"
-            , "minecraft:*_forest"
             , "minecraft:dark_forest_hills"
             , "minecraft:*_taiga"
-            , "minecraft:*_mountains"
-            , "minecraft:giant_tree_taiga_hills"}
+            , "minecraft:giant_tree_taiga_hills" }
     ));
     CROP_BIOMES = COMMON_BUILDER.comment("Map growable block to CSV list of biomes no spaces, -> in between.  It SHOULD be fine to add modded saplings. An empty list means the sapling can gro nowhere.  Delete the key-entry for a sapling to let it grow everywhere.")
         .define("CropBlockToBiome", configstuff);
