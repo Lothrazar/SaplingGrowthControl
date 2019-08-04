@@ -214,7 +214,8 @@ public class ConfigHandler {
             , "minecraft:*_taiga"
             , "minecraft:giant_tree_taiga_hills" }
     ));
-    CROP_BIOMES = COMMON_BUILDER.comment("Map growable block to CSV list of biomes no spaces, -> in between.  It SHOULD be fine to add modded saplings. An empty list means the sapling can gro nowhere.  Delete the key-entry for a sapling to let it grow everywhere.")
+    CROP_BIOMES = COMMON_BUILDER.comment("Map growable block to CSV list of biomes no spaces, -> in between.  It SHOULD be fine to add modded blocks. An empty list means the crop"
+        + " can gro nowhere.  Delete the key-entry for a crop to let it grow everywhere.")
         .define("CropBlockToBiome", configstuff);
     //YES: it is here actually
     COMMON_BUILDER.pop();
