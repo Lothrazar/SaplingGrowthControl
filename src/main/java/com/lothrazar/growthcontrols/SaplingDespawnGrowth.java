@@ -2,8 +2,7 @@ package com.lothrazar.growthcontrols;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
-
-import com.lothrazar.growthcontrols.setup.ConfigHandler;
+import com.lothrazar.growthcontrols.config.ConfigHandler;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
@@ -86,7 +85,7 @@ public class SaplingDespawnGrowth {
     Block b = world.getBlockState(pos).getBlock();
     Biome biome = world.getBiome(pos);
     List<String> allowed = this.getBiomesForGrowth(b, ConfigHandler.CROP_BIOMES);
-    ModSaplings.LOGGER.info(b + "test size    " + allowed);
+    ModGrowthCtrl.LOGGER.info(b + "test size    " + allowed);
     if (allowed == null) {
       //nothing listede for this sapling, evertyhings fine stop blocking the event
       return;
@@ -94,7 +93,7 @@ public class SaplingDespawnGrowth {
     String biomeId = biome.getRegistryName().toString();
     boolean allowedToGrow = UtilString.isInList(allowed, biome.getRegistryName());
     if (allowedToGrow == false) {
-      ModSaplings.LOGGER.info("CropGrowEvent DENY " + biomeId + b);
+      ModGrowthCtrl.LOGGER.info("CropGrowEvent DENY " + biomeId + b);
       event.setResult(Event.Result.DENY);
       this.onGrowCancel(world, pos, biome);
     }
@@ -113,7 +112,7 @@ public class SaplingDespawnGrowth {
       return;
     }
     boolean treeAllowedToGrow = UtilString.isInList(allowed, biome.getRegistryName());
-    ModSaplings.LOGGER.info(treeAllowedToGrow + " treeAllowedToGrow  "
+    ModGrowthCtrl.LOGGER.info(treeAllowedToGrow + " treeAllowedToGrow  "
         + biomeId + allowed.size());
     if (treeAllowedToGrow == false) {
       event.setResult(Event.Result.DENY);
@@ -149,7 +148,7 @@ public class SaplingDespawnGrowth {
 
   private void onGrowCancel(IWorld world, BlockPos pos, Biome biome) {
     world.destroyBlock(pos, true);
-    ModSaplings.LOGGER.info("CropGrowEvent DENY " + biome.getRegistryName());
+    ModGrowthCtrl.LOGGER.info("CropGrowEvent DENY " + biome.getRegistryName());
     this.doSmoke(world, pos);
   }
 

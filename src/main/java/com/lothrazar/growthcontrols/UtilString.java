@@ -32,7 +32,7 @@ public class UtilString {
       if (matchWildcard) {
         String[] blockIdArray = strFromList.split(":");
         if (blockIdArray.length <= 1) {
-          ModSaplings.LOGGER.error("Invalid config value for block : " + strFromList);
+          ModGrowthCtrl.LOGGER.error("Invalid config value for block : " + strFromList);
           return false;
         }
         String modIdFromList = blockIdArray[0];
