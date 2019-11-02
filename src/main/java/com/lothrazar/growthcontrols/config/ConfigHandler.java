@@ -62,6 +62,21 @@ public class ConfigHandler {
   //      , "minecraft:deep_frozen_ocean"
   //  };
 
+  //EMPTY!!!
+  //
+  //"minecraft:desert"
+  //"minecraft:desert_hills"
+  //"minecraft:wooded_hills"
+  //"minecraft:mountain_edge"
+  //"minecraft:stone_shore"
+  //"minecraft:badlands"
+  //"minecraft:wooded_badlands_plateau"
+  //"minecraft:badlands_plateau"
+  //"minecraft:desert_lakes"
+  //"minecraft:ice_spikes"
+  //"minecraft:eroded_badlands"
+  //"minecraft:modified_badlands_plateau"
+  //"minecraft:modified_wooded_badlands_plateau"
   //  Beets (Beta vulgaris) are a cool-season, root vegetable, which means they grow in the cool weather of spring and fall.
   static {
     initConfig();
@@ -173,8 +188,6 @@ public class ConfigHandler {
     Map<String, List<String>> mapInit = this.getMapBiome(ConfigHandler.CROP_BIOMES);
     List<String> result = new ArrayList<>();
     for (Map.Entry<String, List<String>> entry : mapInit.entrySet()) {
-      System.out.println("Key = " + entry.getKey() +
-          ", Value = " + entry.getValue());
       String block = entry.getKey();
       List<String> biomes = entry.getValue();
       if (UtilString.isInList(biomes, biome.getRegistryName())) {
