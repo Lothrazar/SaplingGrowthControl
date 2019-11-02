@@ -10,7 +10,10 @@ import com.electronwill.nightconfig.core.file.CommentedFileConfig;
 import com.electronwill.nightconfig.core.io.WritingMode;
 //import com.lothrazar.examplemod.ExampleMod;
 import com.lothrazar.growthcontrols.ModGrowthCtrl;
+import com.lothrazar.growthcontrols.UtilString;
+import net.minecraft.block.Block;
 import net.minecraft.block.Blocks;
+import net.minecraft.world.biome.Biome;
 import net.minecraftforge.common.ForgeConfigSpec;
 
 public class ConfigHandler {
@@ -27,15 +30,14 @@ public class ConfigHandler {
 
   private static final ForgeConfigSpec.Builder COMMON_BUILDER = new ForgeConfigSpec.Builder();
   public static final String DELIM = "->";
-  public static ForgeConfigSpec.ConfigValue<List<String>> GROWABLE_BIOMES;
   private static ForgeConfigSpec.BooleanValue dropFailedGrowth;
+  public static ForgeConfigSpec.ConfigValue<List<String>> GROWABLE_BIOMES;
   public static ForgeConfigSpec.ConfigValue<List<String>> CROP_BIOMES;
   public static ForgeConfigSpec COMMON_CONFIG;
 
-  public static boolean getdropFailedGrowth() {
+  public boolean getdropFailedGrowth() {
     return dropFailedGrowth.get();
   }
-
   //  private static final String[] badlands = new String[] {
   //      "minecraft:eroded_badlands"
   //      , "minecraft:modified_wooded_badlands_plateau"
@@ -59,9 +61,7 @@ public class ConfigHandler {
   //      , "minecraft:deep_cold_ocean"
   //      , "minecraft:deep_frozen_ocean"
   //  };
-  private static final String[] netherwart = new String[] {
-      "minecraft:nether", "minecraft:hell"
-  };
+
   //  Beets (Beta vulgaris) are a cool-season, root vegetable, which means they grow in the cool weather of spring and fall.
   static {
     initConfig();
@@ -141,7 +141,7 @@ public class ConfigHandler {
     COMMON_CONFIG = COMMON_BUILDER.build();
   }
 
-  public static Map<String, List<String>> getMapBiome(ForgeConfigSpec.ConfigValue<List<String>> conf) {
+  public Map<String, List<String>> getMapBiome(ForgeConfigSpec.ConfigValue<List<String>> conf) {
     final Map<String, List<String>> mapInit = new HashMap<>();
     for (String splitme : conf.get()) {
       try {
@@ -156,5 +156,32 @@ public class ConfigHandler {
       }
     } //TODO: DONT BE LAZY
     return mapInit;
+  }
+
+  public List<String> getBiomesForGrowth(Block block, ForgeConfigSpec.ConfigValue<List<String>> confi) {
+    Map<String, List<String>> mapInit = this.getMapBiome(confi);
+    String key = block.getRegistryName().toString();
+    if (mapInit.containsKey(key) == false) {
+      //null means no list set, so everything allowed
+      return null;
+    }
+    //my list is allowed
+    return mapInit.get(key);
+  }
+
+  public List<String> getGrowthsForBiome(Biome biome) {
+    Map<String, List<String>> mapInit = this.getMapBiome(ConfigHandler.CROP_BIOMES);
+    List<String> result = new ArrayList<>();
+    for (Map.Entry<String, List<String>> entry : mapInit.entrySet()) {
+      System.out.println("Key = " + entry.getKey() +
+          ", Value = " + entry.getValue());
+      String block = entry.getKey();
+      List<String> biomes = entry.getValue();
+      if (UtilString.isInList(biomes, biome.getRegistryName())) {
+        //add it
+        result.add(block);
+      }
+    }
+    return result;
   }
 }
