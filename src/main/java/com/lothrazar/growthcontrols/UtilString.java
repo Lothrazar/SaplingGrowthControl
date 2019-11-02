@@ -3,6 +3,7 @@ package com.lothrazar.growthcontrols;
 import java.util.List;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.TranslationTextComponent;
 
 public class UtilString {
@@ -10,6 +11,12 @@ public class UtilString {
   public static void chatMessage(PlayerEntity player, String message) {
     if (player.world.isRemote) {
       player.sendMessage(new TranslationTextComponent((message)));
+    }
+  }
+
+  public static void chatMessage(PlayerEntity player, ITextComponent displayName) {
+    if (player.world.isRemote) {
+      player.sendMessage(displayName);
     }
   }
 
