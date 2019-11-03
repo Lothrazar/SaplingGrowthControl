@@ -23,7 +23,8 @@ public class GrowEvents {
     IWorld world = event.getWorld();
     BlockPos pos = event.getPos();
     if (world.isAirBlock(pos)) {
-      if (world.getBlockState(pos.down()).getBlock() == Blocks.CACTUS) {
+      Block blockBelow = world.getBlockState(pos.down()).getBlock();
+      if (blockBelow == Blocks.CACTUS || blockBelow == Blocks.CHORUS_FLOWER) {
         //with reeds, its the base growing. with cactus its the air block above that its 'growing' into
         pos = pos.down();
       }

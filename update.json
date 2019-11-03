@@ -19,6 +19,6 @@
   }
   ,"1.14.4":{
   	"0.0.1":"Initial release.  Works with saplings and basic crops. ",
-  	"1.0.0":"Item added to check growables in a biome.  Fix for config files, default config must be deleted to fix issues (or delete underscores).  Cactus and Reeds now supported."
+  	"1.0.0":"Item added to check growables in a biome.  Fix for config files, default config must be deleted to fix issues (or delete underscores).  Cactus, chorus plants and sugar cane (reeds) now supported."
   }
 }
