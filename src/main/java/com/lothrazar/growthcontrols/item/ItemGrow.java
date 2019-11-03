@@ -10,6 +10,7 @@ import net.minecraft.block.BlockState;
 import net.minecraft.client.Minecraft;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.Item;
+import net.minecraft.item.ItemGroup;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.ItemUseContext;
 import net.minecraft.util.ActionResult;
@@ -24,7 +25,7 @@ import net.minecraftforge.registries.ForgeRegistries;
 public class ItemGrow extends Item {
 
   public ItemGrow(Properties p) {
-    super(p.maxStackSize(1));
+    super(p.maxStackSize(1).group(ItemGroup.TOOLS));
   }
 
   @Override

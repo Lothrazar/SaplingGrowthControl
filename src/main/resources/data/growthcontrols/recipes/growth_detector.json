@@ -4,7 +4,7 @@
   "pattern": [
     "pqp",
     " l ",
-    " l "
+    " s "
   ],
   "key": {
     "p": {
@@ -12,6 +12,9 @@
     },
     "l": {
       "item": "minecraft:dirt"
+    },
+    "s": {
+      "item": "minecraft:stick"
     },
     "q": {
       "item": "minecraft:torch"

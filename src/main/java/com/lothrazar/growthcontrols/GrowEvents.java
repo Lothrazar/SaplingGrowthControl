@@ -29,7 +29,7 @@ public class GrowEvents {
         pos = pos.down();
       }
       else {
-        ModGrowthCtrl.LOGGER.info("air and below is nada?" + pos + "?" + world.getBlockState(pos).getBlock());
+        //        ModGrowthCtrl.LOGGER.info("air and below is nada?" + pos + "?" + world.getBlockState(pos).getBlock());
         return;
       }
     }
@@ -37,20 +37,20 @@ public class GrowEvents {
     Biome biome = world.getBiome(pos);
     List<String> allowed = ModGrowthCtrl.config.getBiomesForCrop(b);
     if (allowed == null) {
-      ModGrowthCtrl.LOGGER.info("CropGrowEvent ALLOW since all entries null for this crop" + b);
+      //      ModGrowthCtrl.LOGGER.info("CropGrowEvent ALLOW since all entries null for this crop" + b);
       //nothing listede for this sapling, evertyhings fine stop blocking the event
       return;
     }
     //    String biomeId = biome.getRegistryName().toString();
     boolean allowedToGrow = UtilString.isInList(allowed, biome.getRegistryName());
     if (allowedToGrow == false) {
-      ModGrowthCtrl.LOGGER.info("CropGrowEvent DENY " + biome.getRegistryName() + ":" + b);
+      //      ModGrowthCtrl.LOGGER.info("CropGrowEvent DENY " + biome.getRegistryName() + ":" + b);
       event.setResult(Event.Result.DENY);
       this.onGrowCancel(world, pos, biome);
     }
-    else {
-      ModGrowthCtrl.LOGGER.info("CropGrowEvent ALLOW " + biome.getRegistryName() + ":" + b);
-    }
+    //    else {
+    //      ModGrowthCtrl.LOGGER.info("CropGrowEvent ALLOW " + biome.getRegistryName() + ":" + b);
+    //    }
   }
 
   @SubscribeEvent
@@ -109,7 +109,7 @@ public class GrowEvents {
     double z = pos.getZ() + .5;
     double ySpeed = 0.2;
     for (int i = 0; i < 20; i++) {
-      world.addParticle(ParticleTypes.SMOKE, x, y, z, 0.0D, ySpeed, 0.0D);
+      world.addParticle(ParticleTypes.BUBBLE_POP, x, y, z, 0.0D, ySpeed, 0.0D);
     }
   }
 }
