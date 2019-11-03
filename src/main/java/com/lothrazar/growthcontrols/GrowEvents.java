@@ -85,8 +85,11 @@ public class GrowEvents {
     Block b = world.getBlockState(pos).getBlock();
     Biome biome = world.getBiome(pos);
     //only block bonemeal, IF we find the block in here
-    List<String> crops = ModGrowthCtrl.config.getBiomesCombined(b);
-    boolean allowedCrop = crops == null || UtilString.isInList(crops, biome.getRegistryName());
+    List<String> crops = ModGrowthCtrl.config.getBiomesCombinedAllowNull(b);
+    if (crops == null) {
+      return;
+    }
+    boolean allowedCrop = UtilString.isInList(crops, biome.getRegistryName());
     if (!allowedCrop) {
       event.setCanceled(true);
       event.setResult(Event.Result.DENY);

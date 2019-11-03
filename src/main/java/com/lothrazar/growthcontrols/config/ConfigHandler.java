@@ -202,6 +202,21 @@ public class ConfigHandler {
     return found;
   }
 
+  public List<String> getBiomesCombinedAllowNull(Block block) {
+    List<String> found = getBiomesForCrop(block);
+    List<String> saplings = this.getBiomesForSapling(block);
+    if (found == null) {
+      return saplings;
+    }
+    else {
+      //found is not null
+      if (saplings != null) {
+        found.addAll(saplings);
+      }
+    }
+    return found;
+  }
+
   public List<String> getBiomesForCrop(Block block) {
     Map<String, List<String>> mapInit = this.getMapBiome(CROP_BIOMES);
     String key = block.getRegistryName().toString();
