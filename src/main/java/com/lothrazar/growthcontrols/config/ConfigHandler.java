@@ -109,15 +109,16 @@ public class ConfigHandler {
     configstuff.add(Blocks.JUNGLE_SAPLING.getRegistryName().toString() + DELIM + String.join(",", new String[] {
         "minecraft:jungle_edge", "minecraft:jungle", "minecraft:jungle_hills", "minecraft:modified_jungle", "minecraft:bamboo_jungle", "minecraft:bamboo_jungle_hills",
         "minecraft:modified_jungle_edge", "minecraft:modified_jungle" }));
-    //NEW SETTING
-    configstuff = new ArrayList<>();
+    configstuff.add(Blocks.VINE.getRegistryName().toString() + DELIM + String.join(",", new String[] {
+        "minecraft:*jungle", "minecraft:jungle*", "minecraft:swamp"
+    }));
     SAPLING_BIOMES = COMMON_BUILDER.comment(
         "Map growable block to CSV list of biomes no spaces, -> in between.  It SHOULD be fine to add modded saplings. An empty list means the sapling can gro nowhere.  Delete the key-entry for a sapling to let it grow everywhere.")
         .define("SaplingBlockToBiome", configstuff);
+    //end of saplings 
+    //NEW SETTING
     ////starts here
-    configstuff.add(Blocks.VINE.getRegistryName().toString() + DELIM + String.join(",", new String[] {
-        "minecraft:jungle*", "minecraft:jungle*", "minecraft:swamp"
-    }));
+    configstuff = new ArrayList<>();
     configstuff.add(Blocks.WHEAT.getRegistryName().toString() + DELIM + String.join(",", new String[] {
         "minecraft:plains", "minecraft:swamp", "minecraft:beach"
     }));
