@@ -14,6 +14,11 @@ public class UtilString {
     }
   }
 
+  public static String lang(String message) {
+    TranslationTextComponent t = new TranslationTextComponent(message);
+    return t.getFormattedText();
+  }
+
   public static void chatMessage(PlayerEntity player, ITextComponent displayName) {
     if (player.world.isRemote) {
       player.sendMessage(displayName);

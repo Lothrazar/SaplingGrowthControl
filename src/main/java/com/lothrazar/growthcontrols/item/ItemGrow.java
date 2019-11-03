@@ -6,12 +6,18 @@ import java.util.List;
 import com.lothrazar.growthcontrols.ModGrowthCtrl;
 import com.lothrazar.growthcontrols.UtilString;
 import net.minecraft.block.Block;
+import net.minecraft.block.BlockState;
 import net.minecraft.client.Minecraft;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.Item;
+import net.minecraft.item.ItemStack;
 import net.minecraft.item.ItemUseContext;
+import net.minecraft.util.ActionResult;
 import net.minecraft.util.ActionResultType;
+import net.minecraft.util.Hand;
 import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.text.TextFormatting;
+import net.minecraft.world.World;
 import net.minecraft.world.biome.Biome;
 import net.minecraftforge.registries.ForgeRegistries;
 
@@ -22,11 +28,38 @@ public class ItemGrow extends Item {
   }
 
   @Override
+  public ActionResult<ItemStack> onItemRightClick(World worldIn, PlayerEntity playerIn, Hand handIn) {
+    if (worldIn.isRemote && playerIn.isSneaking()) {
+      ModGrowthCtrl.config.getEmptyBiomes();
+      ItemStack itemstack = playerIn.getHeldItem(handIn);
+      return new ActionResult<>(ActionResultType.SUCCESS, itemstack);
+    }
+    return super.onItemRightClick(worldIn, playerIn, handIn);
+  }
+
+  @Override
   public ActionResultType onItemUse(ItemUseContext c) {
-    Biome biome = c.getWorld().getBiome(c.getPos());
-    List<String> growths = ModGrowthCtrl.config.getGrowthsForBiome(biome);
     if (c.getWorld().isRemote) {
-      sendInfoToPlayer(growths, biome);
+      //first get block info
+      //if any blocks are in a growable list,
+      //show be all biomes for it
+      BlockState block = c.getWorld().getBlockState(c.getPos());
+      List<String> biomes = ModGrowthCtrl.config.getBiomesCombined(block.getBlock());
+      if (biomes != null && biomes.size() > 0) {
+        boolean growHere = UtilString.isInList(biomes, c.getWorld().getBiome(c.getPos()).getRegistryName());
+        TextFormatting formatf = (growHere) ? TextFormatting.GREEN : TextFormatting.RED;
+        UtilString.chatMessage(c.getPlayer(),
+            formatf
+                + block.getBlock().getNameTextComponent().getFormattedText()
+                + " -> " + String.join(", ", biomes));
+      }
+      else {
+        //
+        //else, block is plain, go for the biome lookup
+        Biome biome = c.getWorld().getBiome(c.getPos());
+        List<String> growths = ModGrowthCtrl.config.getGrowthsForBiome(biome);
+        sendInfoToPlayer(growths, biome);
+      }
     }
     return super.onItemUse(c);
   }
@@ -37,11 +70,19 @@ public class ItemGrow extends Item {
     List<String> valid = new ArrayList<>();
     for (String g : growths) {
       Block b = ForgeRegistries.BLOCKS.getValue(new ResourceLocation(g));
-      if (b != null) {
+      if (b == null) {
+        continue;
+      }
+      if (p.isSneaking()) {
+        valid.add(b.getRegistryName().toString());
+      }
+      else {
         valid.add(b.getNameTextComponent().getFormattedText());
       }
     }
     Collections.sort(valid);
-    UtilString.chatMessage(p, biome.getDisplayName().getFormattedText() + " : " + String.join(", ", valid));
+    String bname = (p.isSneaking()) ? biome.getRegistryName().toString() : biome.getDisplayName().getFormattedText();
+    UtilString.chatMessage(p, bname
+        + " : " + String.join(", ", valid));
   }
 }

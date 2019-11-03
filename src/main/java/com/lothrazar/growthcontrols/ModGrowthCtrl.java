@@ -1,7 +1,5 @@
 package com.lothrazar.growthcontrols;
 
-import java.util.Iterator;
-import java.util.List;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import com.lothrazar.growthcontrols.config.ConfigHandler;
@@ -11,7 +9,6 @@ import com.lothrazar.growthcontrols.setup.IProxy;
 import com.lothrazar.growthcontrols.setup.ServerProxy;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemGroup;
-import net.minecraft.world.biome.Biome;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.RegistryEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
@@ -21,7 +18,6 @@ import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
 import net.minecraftforge.fml.event.lifecycle.FMLFingerprintViolationEvent;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
 import net.minecraftforge.fml.loading.FMLPaths;
-import net.minecraftforge.registries.ForgeRegistries;
 import net.minecraftforge.registries.IForgeRegistry;
 
 @Mod("growthcontrols")
@@ -40,20 +36,7 @@ public class ModGrowthCtrl {
     config = new ConfigHandler(ConfigHandler.COMMON_CONFIG, FMLPaths.CONFIGDIR.get().resolve(MODID + ".toml"));
   }
 
-  private void setup(final FMLCommonSetupEvent event) {
-    for (Iterator<Biome> iter = ForgeRegistries.BIOMES.iterator(); iter.hasNext();) {
-      Biome b = iter.next();
-      //find any biomes with NOTHING
-      List<String> has = config.getGrowthsForBiome(b);
-      if (has == null || has.isEmpty()) {
-        System.out.println(b.getRegistryName());
-      }
-      //      else {
-      //        System.out.println(b.getRegistryName() + "  " + has.size());
-      //      }
-    }
-    boolean done = true;
-  }
+  private void setup(final FMLCommonSetupEvent event) {}
 
   @SubscribeEvent
   public static void onFingerprintViolation(FMLFingerprintViolationEvent event) {

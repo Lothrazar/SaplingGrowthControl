@@ -1,20 +1,14 @@
 package com.lothrazar.growthcontrols;
 
 import java.util.List;
-import com.lothrazar.growthcontrols.config.ConfigHandler;
 import net.minecraft.block.Block;
-import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.item.Items;
 import net.minecraft.particles.ParticleTypes;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraft.world.IWorld;
 import net.minecraft.world.World;
 import net.minecraft.world.biome.Biome;
 import net.minecraftforge.event.entity.player.BonemealEvent;
-import net.minecraftforge.event.entity.player.PlayerInteractEvent;
 import net.minecraftforge.event.world.BlockEvent.CropGrowEvent;
 import net.minecraftforge.event.world.SaplingGrowTreeEvent;
 import net.minecraftforge.eventbus.api.Event;
@@ -25,51 +19,13 @@ public class SaplingDespawnGrowth {
   public SaplingDespawnGrowth() {}
 
   @SubscribeEvent
-  public void onUse(PlayerInteractEvent.RightClickBlock event) {
-    if (event.getItemStack().getItem() != Items.STICK ||
-        event.getEntityPlayer().isSneaking() == false) {
-      //if im not holding a stick, OR im not sneaking, halt
-      return;
-    } //else i am holding a stick AND am sneaking
-    String msg = "";
-    //   Biome biome = event.getWorld().getBiome(event.getPos());
-    BlockState st = event.getWorld().getBlockState(event.getPos());
-    List<String> crops = ModGrowthCtrl.config.getBiomesForGrowth(st.getBlock(), ConfigHandler.CROP_BIOMES);
-    List<String> saplings = ModGrowthCtrl.config.getBiomesForGrowth(st.getBlock(), ConfigHandler.GROWABLE_BIOMES);
-    // String strBlock = st.getBlock().getRegistryName().toString();
-    if (crops != null) {
-      //"!" + biome.getRegistryName() + "[C]" + strBlock
-      msg = lang("allowedin.crops") + " | " + String.join(" , ", crops);
-      this.chatMessage(event.getEntityPlayer(), msg);
-    }
-    if (saplings != null) {
-      msg = lang("allowedin.saplings") + " | " + String.join(" , ", saplings);
-      this.chatMessage(event.getEntityPlayer(), msg);
-    }
-    //    else
-    //      this.chatMessage(event.getEntityPlayer(), "everywhere" + st.getBlock().getRegistryName());
-  }
-
-  void chatMessage(PlayerEntity player, String message) {
-    if (player.world.isRemote) {
-      player.sendMessage(new TranslationTextComponent("=="));
-      player.sendMessage(new TranslationTextComponent(message));
-    }
-  }
-
-  public String lang(String message) {
-    TranslationTextComponent t = new TranslationTextComponent(message);
-    return t.getFormattedText();
-  }
-
-  @SubscribeEvent
   public void onCropGrowEvent(CropGrowEvent.Pre event) {
     IWorld world = event.getWorld();
     BlockPos pos = event.getPos();
     Block b = world.getBlockState(pos).getBlock();
     Biome biome = world.getBiome(pos);
-    List<String> allowed = ModGrowthCtrl.config.getBiomesForGrowth(b, ConfigHandler.CROP_BIOMES);
-    ModGrowthCtrl.LOGGER.info(b + "test size    " + allowed);
+    List<String> allowed = ModGrowthCtrl.config.getBiomesForCrop(b);
+    //    ModGrowthCtrl.LOGGER.info(b + "test size    " + allowed);
     if (allowed == null) {
       //nothing listede for this sapling, evertyhings fine stop blocking the event
       return;
@@ -90,14 +46,14 @@ public class SaplingDespawnGrowth {
     Block b = world.getBlockState(pos).getBlock();
     Biome biome = world.getBiome(pos);
     String biomeId = biome.getRegistryName().toString();
-    List<String> allowed = ModGrowthCtrl.config.getBiomesForGrowth(b, ConfigHandler.GROWABLE_BIOMES);
+    List<String> allowed = ModGrowthCtrl.config.getBiomesForSapling(b);
     if (allowed == null) {
       //nothing listede for this sapling, evertyhings fine stop blocking the event
       return;
     }
     boolean treeAllowedToGrow = UtilString.isInList(allowed, biome.getRegistryName());
-    ModGrowthCtrl.LOGGER.info(treeAllowedToGrow + " treeAllowedToGrow  "
-        + biomeId + allowed.size());
+    //    ModGrowthCtrl.LOGGER.info(treeAllowedToGrow + " treeAllowedToGrow  "
+    //        + biomeId + allowed.size());
     if (treeAllowedToGrow == false) {
       event.setResult(Event.Result.DENY);
       if (ModGrowthCtrl.config.getdropFailedGrowth()) {
@@ -113,17 +69,11 @@ public class SaplingDespawnGrowth {
     World world = event.getWorld();
     BlockPos pos = event.getPos();
     Block b = world.getBlockState(pos).getBlock();
-    //    if(b instanceof IGrowable == false || world.getBlockState(pos).isSolid()){
-    //      return;//non solid blocks etc
-    //    }
     Biome biome = world.getBiome(pos);
-    //  String biomeId = biome.getRegistryName().toString();
     //only block bonemeal, IF we find the block in here
-    List<String> crops = ModGrowthCtrl.config.getBiomesForGrowth(b, ConfigHandler.CROP_BIOMES);
-    List<String> saplings = ModGrowthCtrl.config.getBiomesForGrowth(b, ConfigHandler.GROWABLE_BIOMES);
+    List<String> crops = ModGrowthCtrl.config.getBiomesCombined(b);
     boolean allowedCrop = crops == null || UtilString.isInList(crops, biome.getRegistryName());
-    boolean allowedSa = saplings == null || UtilString.isInList(saplings, biome.getRegistryName());
-    if (!allowedCrop || !allowedSa) {
+    if (!allowedCrop) {
       event.setCanceled(true);
       event.setResult(Event.Result.DENY);
       this.doSmoke(world, pos);//no drops, let it happen naturally

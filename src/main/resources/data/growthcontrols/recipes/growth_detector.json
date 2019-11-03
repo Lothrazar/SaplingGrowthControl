@@ -1,0 +1,23 @@
+
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "pqp",
+    " l ",
+    " l "
+  ],
+  "key": {
+    "p": {
+      "item": "minecraft:seeds"
+    },
+    "l": {
+      "item": "minecraft:dirt"
+    },
+    "q": {
+      "item": "minecraft:stone"
+    }
+  },
+  "result": {
+    "item": "growthcontrols:growth_detector"
+  }
+}
