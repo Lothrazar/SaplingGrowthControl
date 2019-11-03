@@ -24,7 +24,7 @@ import net.minecraftforge.registries.ForgeRegistries;
 public class ItemGrow extends Item {
 
   public ItemGrow(Properties p) {
-    super(p);
+    super(p.maxStackSize(1));
   }
 
   @Override

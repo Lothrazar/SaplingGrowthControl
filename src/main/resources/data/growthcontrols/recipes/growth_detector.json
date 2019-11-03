@@ -8,13 +8,13 @@
   ],
   "key": {
     "p": {
-      "item": "minecraft:seeds"
+      "item": "minecraft:wheat_seeds"
     },
     "l": {
       "item": "minecraft:dirt"
     },
     "q": {
-      "item": "minecraft:stone"
+      "item": "minecraft:torch"
     }
   },
   "result": {

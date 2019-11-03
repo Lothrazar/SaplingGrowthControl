@@ -14,28 +14,41 @@ import net.minecraftforge.event.world.SaplingGrowTreeEvent;
 import net.minecraftforge.eventbus.api.Event;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 
-public class SaplingDespawnGrowth {
+public class GrowEvents {
 
-  public SaplingDespawnGrowth() {}
+  public GrowEvents() {}
 
   @SubscribeEvent
   public void onCropGrowEvent(CropGrowEvent.Pre event) {
     IWorld world = event.getWorld();
     BlockPos pos = event.getPos();
+    if (world.isAirBlock(pos)) {
+      if (world.getBlockState(pos.down()).getBlock() == Blocks.CACTUS) {
+        //with reeds, its the base growing. with cactus its the air block above that its 'growing' into
+        pos = pos.down();
+      }
+      else {
+        ModGrowthCtrl.LOGGER.info("air and below is nada?" + pos + "?" + world.getBlockState(pos).getBlock());
+        return;
+      }
+    }
     Block b = world.getBlockState(pos).getBlock();
     Biome biome = world.getBiome(pos);
     List<String> allowed = ModGrowthCtrl.config.getBiomesForCrop(b);
-    //    ModGrowthCtrl.LOGGER.info(b + "test size    " + allowed);
     if (allowed == null) {
+      ModGrowthCtrl.LOGGER.info("CropGrowEvent ALLOW since all entries null for this crop" + b);
       //nothing listede for this sapling, evertyhings fine stop blocking the event
       return;
     }
-    String biomeId = biome.getRegistryName().toString();
+    //    String biomeId = biome.getRegistryName().toString();
     boolean allowedToGrow = UtilString.isInList(allowed, biome.getRegistryName());
     if (allowedToGrow == false) {
-      ModGrowthCtrl.LOGGER.info("CropGrowEvent DENY " + biomeId + b);
+      ModGrowthCtrl.LOGGER.info("CropGrowEvent DENY " + biome.getRegistryName() + ":" + b);
       event.setResult(Event.Result.DENY);
       this.onGrowCancel(world, pos, biome);
+    }
+    else {
+      ModGrowthCtrl.LOGGER.info("CropGrowEvent ALLOW " + biome.getRegistryName() + ":" + b);
     }
   }
 
@@ -82,7 +95,7 @@ public class SaplingDespawnGrowth {
 
   private void onGrowCancel(IWorld world, BlockPos pos, Biome biome) {
     world.destroyBlock(pos, true);
-    ModGrowthCtrl.LOGGER.info("CropGrowEvent DENY " + biome.getRegistryName());
+    //    ModGrowthCtrl.LOGGER.info("CropGrowEvent DENY " + biome.getRegistryName());
     this.doSmoke(world, pos);
   }
 

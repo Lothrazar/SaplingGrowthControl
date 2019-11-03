@@ -31,8 +31,8 @@ public class ModGrowthCtrl {
 
   public ModGrowthCtrl() {
     FMLJavaModLoadingContext.get().getModEventBus().addListener(this::setup);
-    MinecraftForge.EVENT_BUS.register(new SaplingDespawnGrowth());
     MinecraftForge.EVENT_BUS.register(this);
+    MinecraftForge.EVENT_BUS.register(new GrowEvents());
     config = new ConfigHandler(ConfigHandler.COMMON_CONFIG, FMLPaths.CONFIGDIR.get().resolve(MODID + ".toml"));
   }
 
