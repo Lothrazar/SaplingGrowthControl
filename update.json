@@ -9,15 +9,16 @@
     "1.8.8-recommended": "1.1.0",
     "1.8.9-latest": "1.1.0",
     "1.8.9-recommended": "1.1.0",
+    "1.9-latest": "1.1.1",
     "1.9-recommended": "1.1.1",
-    "1.9-recommended": "1.1.1",
-    "1.14.4":"0.0.2"
+    "1.14.4-latest":"1.0.0",
+  	"1.14.4-recommended":"1.0.0"
   }
   ,"1.9":{
   	"1.1.1":"Fix crashes - adapt to breaking changes in Forge"
   }
   ,"1.14.4":{
-  	"0.0.1":"release",
-  	"0.0.2":"Item added to check growables in a biome.  Fix for config files, default config must be deleted to fix issues (or delete underscores).  "
+  	"0.0.1":"Initial release.  Works with saplings and basic crops. ",
+  	"1.0.0":"Item added to check growables in a biome.  Fix for config files, default config must be deleted to fix issues (or delete underscores).  Cactus and Reeds now supported."
   }
 }
