@@ -109,12 +109,15 @@ public class ConfigHandler {
     configstuff.add(Blocks.JUNGLE_SAPLING.getRegistryName().toString() + DELIM + String.join(",", new String[] {
         "minecraft:jungle_edge", "minecraft:jungle", "minecraft:jungle_hills", "minecraft:modified_jungle", "minecraft:bamboo_jungle", "minecraft:bamboo_jungle_hills",
         "minecraft:modified_jungle_edge", "minecraft:modified_jungle" }));
-    //unsupported type: map
+    //NEW SETTING
+    configstuff = new ArrayList<>();
     SAPLING_BIOMES = COMMON_BUILDER.comment(
         "Map growable block to CSV list of biomes no spaces, -> in between.  It SHOULD be fine to add modded saplings. An empty list means the sapling can gro nowhere.  Delete the key-entry for a sapling to let it grow everywhere.")
         .define("SaplingBlockToBiome", configstuff);
-    //
-    configstuff = new ArrayList<>();
+    ////starts here
+    configstuff.add(Blocks.VINE.getRegistryName().toString() + DELIM + String.join(",", new String[] {
+        "minecraft:jungle*", "minecraft:jungle*", "minecraft:swamp"
+    }));
     configstuff.add(Blocks.WHEAT.getRegistryName().toString() + DELIM + String.join(",", new String[] {
         "minecraft:plains", "minecraft:swamp", "minecraft:beach"
     }));
@@ -130,11 +133,13 @@ public class ConfigHandler {
         "minecraft:dark_forest", "minecraft:dark_forest_hills"
     }));
     final String[] cactua = new String[] {
-        "minecraft:desert", "minecraft:desert_hills", "minecraft:badlands", "minecraft:badlands*", "minecraft:*badlands"
+        "minecraft:desert", "minecraft:desert_hills", "minecraft:desert_lakes", "minecraft:badlands", "minecraft:badlands*", "minecraft:*badlands"
     };
     configstuff.add(Blocks.CACTUS.getRegistryName().toString() + DELIM + String.join(",", cactua));
     final String[] reeds = new String[] {
-        "minecraft:stone_shore", "minecraft:desert_lakes"
+        "minecraft:desert_lakes", "minecraft:stone_shore",
+        "minecraft:ocean", "minecraft:river", "minecraft:beach",
+        "minecraft:deep_ocean", "minecraft:warm_ocean", "minecraft:lukewarm_ocean", "minecraft:deep_warm_ocean", "minecraft:deep_lukewarm_ocean",
     };
     configstuff.add(Blocks.SUGAR_CANE.getRegistryName().toString() + DELIM + String.join(",", reeds));
     final String[] purpur = new String[] {
@@ -144,8 +149,7 @@ public class ConfigHandler {
     configstuff.add(Blocks.CHORUS_FLOWER.getRegistryName().toString() + DELIM + String.join(",", purpur));
     configstuff.add(Blocks.CHORUS_PLANT.getRegistryName().toString() + DELIM + String.join(",", purpur));
     final String[] mushrooms = new String[] {
-        "minecraft:mushroom*", "minecraft:mushroom_field_shore", "minecraft:nether", "minecraft:mesa*", "minecraft:mesa", "minecraft:small_end_islands", "minecraft:end*", "minecraft:the_end",
-        "minecraft:the_void"
+        "minecraft:mushroom*", "minecraft:nether", "minecraft:roofed_forest*"
     };
     configstuff.add(Blocks.BROWN_MUSHROOM.getRegistryName().toString() + DELIM + String.join(",", mushrooms));
     configstuff.add(Blocks.RED_MUSHROOM.getRegistryName().toString() + DELIM + String.join(",", mushrooms));
@@ -155,15 +159,14 @@ public class ConfigHandler {
             "minecraft:modified_jungle_edge", "minecraft:modified_jungle" }));
     configstuff.add(Blocks.MELON_STEM.getRegistryName().toString() + DELIM + String.join(",",
         new String[] {
-            "minecraft:ocean", "minecraft:mesa*", "minecraft:mesa", "minecraft:*ocean", "minecraft:river", "minecraft:frozen_ocean", "minecraft:frozen_river", "minecraft:beach",
-            "minecraft:deep_ocean", "minecraft:warm_ocean", "minecraft:lukewarm_ocean", "minecraft:cold_ocean", "minecraft:deep_warm_ocean", "minecraft:deep_lukewarm_ocean",
-            "minecraft:deep_cold_ocean", "minecraft:deep_frozen_ocean", "minecraft:jungle", "minecraft:jungle*", "minecraft:modified_jungle", "minecraft:bamboo_jungle",
+            "minecraft:ocean", "minecraft:river", "minecraft:beach",
+            "minecraft:deep_ocean", "minecraft:warm_ocean", "minecraft:lukewarm_ocean", "minecraft:deep_warm_ocean", "minecraft:deep_lukewarm_ocean",
+            "minecraft:jungle", "minecraft:jungle*", "minecraft:*jungle", "minecraft:bamboo_jungle",
             "minecraft:bamboo_jungle_hills", "minecraft:modified_jungle_edge", "minecraft:modified_jungle" }));
     configstuff.add(Blocks.PUMPKIN_STEM.getRegistryName().toString() + DELIM + String.join(",",
         new String[] {
-            "minecraft:extreme*"
-            // // and "mesa"
-            , "minecraft:taiga", "minecraft:snowy*", "minecraft:taiga*", "minecraft:dark_forest_hills", "minecraft:*taiga", "minecraft:giant_tree_taiga_hills" }));
+            "minecraft:extreme*", "minecraft:taiga", "minecraft:snowy*", "minecraft:taiga*", "minecraft:dark_forest_hills", "minecraft:*taiga",
+            "minecraft:giant_tree_taiga_hills" }));
     CROP_BIOMES = COMMON_BUILDER.comment("Map growable block to CSV list of biomes no spaces, -> in between.  It SHOULD be fine to add modded blocks. An empty list means the crop"
         + " can gro nowhere.  Delete the key-entry for a crop to let it grow everywhere.")
         .define("CropBlockToBiome", configstuff);
