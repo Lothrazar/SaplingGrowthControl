@@ -1,0 +1,26 @@
+
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "pqp",
+    " l ",
+    " s "
+  ],
+  "key": {
+    "p": {
+      "item": "minecraft:wheat_seeds"
+    },
+    "l": {
+      "item": "minecraft:dirt"
+    },
+    "s": {
+      "item": "minecraft:stick"
+    },
+    "q": {
+      "item": "minecraft:torch"
+    }
+  },
+  "result": {
+    "item": "growthcontrols:growth_detector"
+  }
+}
