@@ -17,6 +17,7 @@ import net.minecraft.util.ActionResult;
 import net.minecraft.util.ActionResultType;
 import net.minecraft.util.Hand;
 import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.text.TextFormatting;
 import net.minecraft.world.World;
 import net.minecraft.world.biome.Biome;
@@ -30,12 +31,16 @@ public class ItemGrow extends Item {
 
   @Override
   public ActionResult<ItemStack> onItemRightClick(World worldIn, PlayerEntity playerIn, Hand handIn) {
-    if (worldIn.isRemote && playerIn.isSneaking()) {
+    if (worldIn.isRemote && playerIn.isCrouching()) {
       ModGrowthCtrl.config.getEmptyBiomes();
       ItemStack itemstack = playerIn.getHeldItem(handIn);
       return new ActionResult<>(ActionResultType.SUCCESS, itemstack);
     }
     return super.onItemRightClick(worldIn, playerIn, handIn);
+  }
+
+  private Biome getBiome(World world, BlockPos pos) {
+    return world.func_225523_d_().func_226836_a_(pos);
   }
 
   @Override
@@ -47,7 +52,7 @@ public class ItemGrow extends Item {
       BlockState block = c.getWorld().getBlockState(c.getPos());
       List<String> biomes = ModGrowthCtrl.config.getBiomesCombined(block.getBlock());
       if (biomes != null && biomes.size() > 0) {
-        boolean growHere = UtilString.isInList(biomes, c.getWorld().getBiome(c.getPos()).getRegistryName());
+        boolean growHere = UtilString.isInList(biomes, getBiome(c.getWorld(), c.getPos()).getRegistryName());
         TextFormatting formatf = (growHere) ? TextFormatting.GREEN : TextFormatting.RED;
         UtilString.chatMessage(c.getPlayer(),
             formatf
@@ -57,7 +62,7 @@ public class ItemGrow extends Item {
       else {
         //
         //else, block is plain, go for the biome lookup
-        Biome biome = c.getWorld().getBiome(c.getPos());
+        Biome biome = getBiome(c.getWorld(), c.getPos());
         List<String> growths = ModGrowthCtrl.config.getGrowthsForBiome(biome);
         sendInfoToPlayer(growths, biome);
       }
@@ -74,7 +79,7 @@ public class ItemGrow extends Item {
       if (b == null) {
         continue;
       }
-      if (p.isSneaking()) {
+      if (p.isCrouching()) {
         valid.add(b.getRegistryName().toString());
       }
       else {
@@ -82,7 +87,7 @@ public class ItemGrow extends Item {
       }
     }
     Collections.sort(valid);
-    String bname = (p.isSneaking()) ? biome.getRegistryName().toString() : biome.getDisplayName().getFormattedText();
+    String bname = (p.isCrouching()) ? biome.getRegistryName().toString() : biome.getDisplayName().getFormattedText();
     UtilString.chatMessage(p, bname
         + " : " + String.join(", ", valid));
   }
