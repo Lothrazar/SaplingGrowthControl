@@ -19,6 +19,7 @@ import net.minecraft.util.Hand;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.text.TextFormatting;
+import net.minecraft.world.IWorld;
 import net.minecraft.world.World;
 import net.minecraft.world.biome.Biome;
 import net.minecraftforge.registries.ForgeRegistries;
@@ -39,8 +40,8 @@ public class ItemGrow extends Item {
     return super.onItemRightClick(worldIn, playerIn, handIn);
   }
 
-  private Biome getBiome(World world, BlockPos pos) {
-    return world.func_225523_d_().func_226836_a_(pos);
+  public static Biome getBiome(IWorld world, BlockPos pos) {
+    return world.getBiomeManager().getBiome(pos);
   }
 
   @Override

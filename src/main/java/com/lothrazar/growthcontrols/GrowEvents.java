@@ -1,6 +1,7 @@
 package com.lothrazar.growthcontrols;
 
 import java.util.List;
+import com.lothrazar.growthcontrols.item.ItemGrow;
 import net.minecraft.block.Block;
 import net.minecraft.block.Blocks;
 import net.minecraft.particles.ParticleTypes;
@@ -34,7 +35,7 @@ public class GrowEvents {
       }
     }
     Block b = world.getBlockState(pos).getBlock();
-    Biome biome = world.func_225523_d_().func_226836_a_(pos);
+    Biome biome = ItemGrow.getBiome(world, pos);//world.func_225523_d_().func_226836_a_(pos);
     List<String> allowed = ModGrowthCtrl.config.getBiomesForCrop(b);
     if (allowed == null) {
       //      ModGrowthCtrl.LOGGER.info("CropGrowEvent ALLOW since all entries null for this crop" + b);
@@ -58,7 +59,7 @@ public class GrowEvents {
     IWorld world = event.getWorld();
     BlockPos pos = event.getPos();
     Block b = world.getBlockState(pos).getBlock();
-    Biome biome = world.func_225523_d_().func_226836_a_(pos);
+    Biome biome = ItemGrow.getBiome(world, pos);
     String biomeId = biome.getRegistryName().toString();
     List<String> allowed = ModGrowthCtrl.config.getBiomesForSapling(b);
     if (allowed == null) {
@@ -83,7 +84,7 @@ public class GrowEvents {
     World world = event.getWorld();
     BlockPos pos = event.getPos();
     Block b = world.getBlockState(pos).getBlock();
-    Biome biome = world.func_225523_d_().func_226836_a_(pos);
+    Biome biome = ItemGrow.getBiome(world, pos);
     //only block bonemeal, IF we find the block in here
     List<String> crops = ModGrowthCtrl.config.getBiomesCombinedAllowNull(b);
     if (crops == null) {

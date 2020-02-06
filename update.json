@@ -20,5 +20,8 @@
   ,"1.14.4":{
   	"0.0.1":"Initial release.  Works with saplings and basic crops, including cocoa. ",
   	"1.0.0":"Item added to check growables in a biome.  Bonemeal till works whenever normal growth works for that crop in that location (Bonemeal still works on things like grass blocks, flowers for example).  If you have a config file from 0.0.1 release you should delete and let it regenerate to avoid issues.  Cactus, chorus plants and sugar cane (reeds) now supported."
+  },
+  "1.15.2": {
+  	"1.0.0":""
   }
 }

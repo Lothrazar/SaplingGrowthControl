@@ -14,6 +14,7 @@ import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.DistExecutor;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
+import net.minecraftforge.fml.event.lifecycle.FMLFingerprintViolationEvent;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
 import net.minecraftforge.fml.loading.FMLPaths;
 import net.minecraftforge.registries.IForgeRegistry;
@@ -25,7 +26,7 @@ public class ModGrowthCtrl {
   public static ConfigHandler config;
   public static final IProxy proxy = DistExecutor.runForDist(() -> () -> new ClientProxy(), () -> () -> new ServerProxy());
   public static final Logger LOGGER = LogManager.getLogger();
-  //  private String certificateFingerprint = "@FINGERPRINT@";
+  private String certificateFingerprint = "@FINGERPRINT@";
 
   public ModGrowthCtrl() {
     FMLJavaModLoadingContext.get().getModEventBus().addListener(this::setup);
@@ -35,14 +36,14 @@ public class ModGrowthCtrl {
   }
 
   private void setup(final FMLCommonSetupEvent event) {}
-  //
-  //  @SubscribeEvent
-  //  public static void onFingerprintViolation(FMLFingerprintViolationEvent event) {
-  //    // https://tutorials.darkhax.net/tutorials/jar_signing/
-  //    String source = (event.getSource() == null) ? "" : event.getSource().getName() + " ";
-  //    String msg = MODID + "Invalid fingerprint detected! The file " + source + "may have been tampered with. This version will NOT be supported by the author!";
-  //    //   System.out.println(msg);
-  //  }
+
+  @SubscribeEvent
+  public static void onFingerprintViolation(FMLFingerprintViolationEvent event) {
+    // https://tutorials.darkhax.net/tutorials/jar_signing/
+    String source = (event.getSource() == null) ? "" : event.getSource().getName() + " ";
+    String msg = MODID + "Invalid fingerprint detected! The file " + source + "may have been tampered with. This version will NOT be supported by the author!";
+    //   System.out.println(msg);
+  }
 
   @Mod.EventBusSubscriber(bus = Mod.EventBusSubscriber.Bus.MOD)
   public static class RegistryEvents {
