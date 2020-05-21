@@ -1,3 +1,15 @@
 # SaplingGrowthControl
-Minecraft mod written in Java
- [![](http://cf.way2muchnoise.eu/232166.svg)](https://minecraft.curseforge.com/projects/restricted-saplings) [![](http://cf.way2muchnoise.eu/versions/232166.svg)](https://minecraft.curseforge.com/projects/restricted-saplings)
+
+
+ [![](http://cf.way2muchnoise.eu/232166.svg)](https://www.curseforge.com/minecraft/mc-mods/restricted-saplings) 
+ [![](http://cf.way2muchnoise.eu/versions/232166.svg)](https://www.curseforge.com/minecraft/mc-mods/restricted-saplings)
+ 
+ A Forge mod for Minecraft Java
+
+- Download a Forge MDK from [https://files.minecraftforge.net/](https://files.minecraftforge.net)
+
+- Clone this repository and add the files into the unzipped MDK folder
+
+- run ./setup.sh
+
+- Open as a Gradle project in Eclipse (or your favorite Java IDE)
