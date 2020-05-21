@@ -11,8 +11,8 @@
     "1.8.9-recommended": "1.1.0",
     "1.9-latest": "1.1.1",
     "1.9-recommended": "1.1.1",
-    "1.14.4-latest":"1.0.0",
-  	"1.14.4-recommended":"1.0.0"
+    "1.15.2-latest":"1.0.0",
+  	"1.15.2-recommended":"1.0.0"
   }
   ,"1.9":{
   	"1.1.1":"Fix crashes - adapt to breaking changes in Forge"
@@ -22,6 +22,6 @@
   	"1.0.0":"Item added to check growables in a biome.  Bonemeal till works whenever normal growth works for that crop in that location (Bonemeal still works on things like grass blocks, flowers for example).  If you have a config file from 0.0.1 release you should delete and let it regenerate to avoid issues.  Cactus, chorus plants and sugar cane (reeds) now supported."
   },
   "1.15.2": {
-  	"1.0.0":""
+  	"1.0.0":"Ported"
   }
 }
