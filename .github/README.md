@@ -3,6 +3,9 @@
 
  [![](http://cf.way2muchnoise.eu/232166.svg)](https://www.curseforge.com/minecraft/mc-mods/restricted-saplings) 
  [![](http://cf.way2muchnoise.eu/versions/232166.svg)](https://www.curseforge.com/minecraft/mc-mods/restricted-saplings)
+[![License: MIT](https://img.shields.io/badge/License-MIT-green.svg)](https://opensource.org/licenses/MIT)
+[![Twitter Badge](https://img.shields.io/badge/contact-twitter-blue.svg)](https://twitter.com/lothrazar)
+ 
  
  A Forge mod for Minecraft Java
 
@@ -13,3 +16,6 @@
 - run ./setup.sh
 
 - Open as a Gradle project in Eclipse (or your favorite Java IDE)
+
+
+[![](https://c5.patreon.com/external/logo/become_a_patron_button.png)](https://www.patreon.com/lothrazar)
