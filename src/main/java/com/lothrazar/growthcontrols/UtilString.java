@@ -1,6 +1,7 @@
 package com.lothrazar.growthcontrols;
 
 import java.util.List;
+import java.util.UUID;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.text.ITextComponent;
@@ -10,18 +11,13 @@ public class UtilString {
 
   public static void chatMessage(PlayerEntity player, String message) {
     if (player.world.isRemote) {
-      player.sendMessage(new TranslationTextComponent((message)));
+      player.sendMessage(new TranslationTextComponent(message), UUID.randomUUID());
     }
-  }
-
-  public static String lang(String message) {
-    TranslationTextComponent t = new TranslationTextComponent(message);
-    return t.getFormattedText();
   }
 
   public static void chatMessage(PlayerEntity player, ITextComponent displayName) {
     if (player.world.isRemote) {
-      player.sendMessage(displayName);
+      player.sendMessage(displayName, UUID.randomUUID());
     }
   }
 

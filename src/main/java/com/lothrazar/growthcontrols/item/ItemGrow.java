@@ -57,7 +57,7 @@ public class ItemGrow extends Item {
         TextFormatting formatf = (growHere) ? TextFormatting.GREEN : TextFormatting.RED;
         UtilString.chatMessage(c.getPlayer(),
             formatf
-                + block.getBlock().getNameTextComponent().getFormattedText()
+                + block.getBlock().getTranslatedName().getStringTruncated(100)
                 + " -> " + String.join(", ", biomes));
       }
       else {
@@ -84,11 +84,11 @@ public class ItemGrow extends Item {
         valid.add(b.getRegistryName().toString());
       }
       else {
-        valid.add(b.getNameTextComponent().getFormattedText());
+        valid.add(b.getTranslatedName().getStringTruncated(100));
       }
     }
     Collections.sort(valid);
-    String bname = (p.isCrouching()) ? biome.getRegistryName().toString() : biome.getDisplayName().getFormattedText();
+    String bname = (p.isCrouching()) ? biome.getRegistryName().toString() : biome.getDisplayName().getString();
     UtilString.chatMessage(p, bname
         + " : " + String.join(", ", valid));
   }
