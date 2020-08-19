@@ -6,6 +6,7 @@ import net.minecraft.block.Block;
 import net.minecraft.block.Blocks;
 import net.minecraft.particles.ParticleTypes;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.registry.WorldGenRegistries;
 import net.minecraft.world.IWorld;
 import net.minecraft.world.World;
 import net.minecraft.world.biome.Biome;
@@ -43,7 +44,8 @@ public class GrowEvents {
       return;
     }
     //    String biomeId = biome.getRegistryName().toString();
-    boolean allowedToGrow = UtilString.isInList(allowed, biome.getRegistryName());
+    //because getRegistryName is too fucking easy
+    boolean allowedToGrow = UtilString.isInList(allowed, WorldGenRegistries.field_243657_i.getKey(biome));
     if (allowedToGrow == false) {
       //      ModGrowthCtrl.LOGGER.info("CropGrowEvent DENY " + biome.getRegistryName() + ":" + b);
       event.setResult(Event.Result.DENY);
@@ -60,13 +62,13 @@ public class GrowEvents {
     BlockPos pos = event.getPos();
     Block b = world.getBlockState(pos).getBlock();
     Biome biome = ItemGrow.getBiome(world, pos);
-    String biomeId = biome.getRegistryName().toString();
+    //    String biomeId = WorldGenRegistries.field_243657_i.getKey(biome).toString();
     List<String> allowed = ModGrowthCtrl.config.getBiomesForSapling(b);
     if (allowed == null) {
       //nothing listede for this sapling, evertyhings fine stop blocking the event
       return;
     }
-    boolean treeAllowedToGrow = UtilString.isInList(allowed, biome.getRegistryName());
+    boolean treeAllowedToGrow = UtilString.isInList(allowed, WorldGenRegistries.field_243657_i.getKey(biome));
     //    ModGrowthCtrl.LOGGER.info(treeAllowedToGrow + " treeAllowedToGrow  "
     //        + biomeId + allowed.size());
     if (treeAllowedToGrow == false) {
@@ -90,7 +92,7 @@ public class GrowEvents {
     if (crops == null) {
       return;
     }
-    boolean allowedCrop = UtilString.isInList(crops, biome.getRegistryName());
+    boolean allowedCrop = UtilString.isInList(crops, WorldGenRegistries.field_243657_i.getKey(biome));
     if (!allowedCrop) {
       event.setCanceled(true);
       event.setResult(Event.Result.DENY);

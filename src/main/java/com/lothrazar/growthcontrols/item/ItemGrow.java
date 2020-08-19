@@ -18,6 +18,7 @@ import net.minecraft.util.ActionResultType;
 import net.minecraft.util.Hand;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.registry.WorldGenRegistries;
 import net.minecraft.util.text.TextFormatting;
 import net.minecraft.world.IWorld;
 import net.minecraft.world.World;
@@ -53,7 +54,8 @@ public class ItemGrow extends Item {
       BlockState block = c.getWorld().getBlockState(c.getPos());
       List<String> biomes = ModGrowthCtrl.config.getBiomesCombined(block.getBlock());
       if (biomes != null && biomes.size() > 0) {
-        boolean growHere = UtilString.isInList(biomes, getBiome(c.getWorld(), c.getPos()).getRegistryName());
+        Biome b = getBiome(c.getWorld(), c.getPos());
+        boolean growHere = UtilString.isInList(biomes, WorldGenRegistries.field_243657_i.getKey(b));
         TextFormatting formatf = (growHere) ? TextFormatting.GREEN : TextFormatting.RED;
         UtilString.chatMessage(c.getPlayer(),
             formatf
@@ -87,8 +89,10 @@ public class ItemGrow extends Item {
         valid.add(b.getTranslatedName().getStringTruncated(100));
       }
     }
+    String id = WorldGenRegistries.field_243657_i.getKey(biome).toString();
+    String name = id;//biome names are illegal thanks mojang
     Collections.sort(valid);
-    String bname = (p.isCrouching()) ? biome.getRegistryName().toString() : biome.getDisplayName().getString();
+    String bname = (p.isCrouching()) ? id : name;
     UtilString.chatMessage(p, bname
         + " : " + String.join(", ", valid));
   }
