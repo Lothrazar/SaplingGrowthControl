@@ -17,6 +17,7 @@ import net.minecraft.block.Blocks;
 import net.minecraft.client.Minecraft;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.world.biome.Biome;
+import net.minecraft.world.biome.BiomeManager;
 import net.minecraftforge.common.ForgeConfigSpec;
 import net.minecraftforge.registries.ForgeRegistries;
 
@@ -66,6 +67,8 @@ public class ConfigHandler {
   public void getEmptyBiomes() {
     PlayerEntity p = Minecraft.getInstance().player;// ModGrowthCtrl.proxy.getClientWorld();
     List<String> valid = new ArrayList<>();
+    BiomeManager test;
+    //    ForgeRegistries.
     for (Iterator<Biome> iter = ForgeRegistries.BIOMES.iterator(); iter.hasNext();) {
       Biome b = iter.next();
       //find any biomes with NOTHING

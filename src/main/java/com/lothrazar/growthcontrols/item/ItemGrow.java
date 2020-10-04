@@ -55,7 +55,7 @@ public class ItemGrow extends Item {
       List<String> biomes = ModGrowthCtrl.config.getBiomesCombined(block.getBlock());
       if (biomes != null && biomes.size() > 0) {
         Biome b = getBiome(c.getWorld(), c.getPos());
-        boolean growHere = UtilString.isInList(biomes, WorldGenRegistries.field_243657_i.getKey(b));
+        boolean growHere = UtilString.isInList(biomes, WorldGenRegistries.BIOME.getKey(b));
         TextFormatting formatf = (growHere) ? TextFormatting.GREEN : TextFormatting.RED;
         UtilString.chatMessage(c.getPlayer(),
             formatf
@@ -89,7 +89,7 @@ public class ItemGrow extends Item {
         valid.add(b.getTranslatedName().getStringTruncated(100));
       }
     }
-    String id = WorldGenRegistries.field_243657_i.getKey(biome).toString();
+    String id = WorldGenRegistries.BIOME.getKey(biome).toString();
     String name = id;//biome names are illegal thanks mojang
     Collections.sort(valid);
     String bname = (p.isCrouching()) ? id : name;

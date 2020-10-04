@@ -45,7 +45,7 @@ public class GrowEvents {
     }
     //    String biomeId = biome.getRegistryName().toString();
     //because getRegistryName is too fucking easy
-    boolean allowedToGrow = UtilString.isInList(allowed, WorldGenRegistries.field_243657_i.getKey(biome));
+    boolean allowedToGrow = UtilString.isInList(allowed, WorldGenRegistries.BIOME.getKey(biome));
     if (allowedToGrow == false) {
       //      ModGrowthCtrl.LOGGER.info("CropGrowEvent DENY " + biome.getRegistryName() + ":" + b);
       event.setResult(Event.Result.DENY);
@@ -68,7 +68,7 @@ public class GrowEvents {
       //nothing listede for this sapling, evertyhings fine stop blocking the event
       return;
     }
-    boolean treeAllowedToGrow = UtilString.isInList(allowed, WorldGenRegistries.field_243657_i.getKey(biome));
+    boolean treeAllowedToGrow = UtilString.isInList(allowed, WorldGenRegistries.BIOME.getKey(biome));
     //    ModGrowthCtrl.LOGGER.info(treeAllowedToGrow + " treeAllowedToGrow  "
     //        + biomeId + allowed.size());
     if (treeAllowedToGrow == false) {
@@ -92,7 +92,7 @@ public class GrowEvents {
     if (crops == null) {
       return;
     }
-    boolean allowedCrop = UtilString.isInList(crops, WorldGenRegistries.field_243657_i.getKey(biome));
+    boolean allowedCrop = UtilString.isInList(crops, WorldGenRegistries.BIOME.getKey(biome));
     if (!allowedCrop) {
       event.setCanceled(true);
       event.setResult(Event.Result.DENY);
