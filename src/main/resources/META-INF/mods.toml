@@ -27,6 +27,8 @@ logoFile="examplemod.png" #optional
 credits="Thanks for this example mod goes to Java" #optional
 # A text field displayed in the mod UI
 authors="Lothrazar" #optional
+# License
+license="The MIT License (MIT)"
 # The description text for the mod (multi line!) (#mandatory)
 description='''
 Plants each only grow in a few biomes
