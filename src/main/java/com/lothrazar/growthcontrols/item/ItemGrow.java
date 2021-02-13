@@ -1,13 +1,12 @@
 package com.lothrazar.growthcontrols.item;
 
+import com.lothrazar.growthcontrols.ModGrowthCtrl;
+import com.lothrazar.growthcontrols.UtilString;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
-import com.lothrazar.growthcontrols.ModGrowthCtrl;
-import com.lothrazar.growthcontrols.UtilString;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
-import net.minecraft.client.Minecraft;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemGroup;
@@ -18,7 +17,7 @@ import net.minecraft.util.ActionResultType;
 import net.minecraft.util.Hand;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.registry.WorldGenRegistries;
+import net.minecraft.util.registry.Registry;
 import net.minecraft.util.text.TextFormatting;
 import net.minecraft.world.IWorld;
 import net.minecraft.world.World;
@@ -34,7 +33,7 @@ public class ItemGrow extends Item {
   @Override
   public ActionResult<ItemStack> onItemRightClick(World worldIn, PlayerEntity playerIn, Hand handIn) {
     if (worldIn.isRemote && playerIn.isCrouching()) {
-      ModGrowthCtrl.config.getEmptyBiomes();
+      ModGrowthCtrl.CONFIG.getEmptyBiomes(playerIn);
       ItemStack itemstack = playerIn.getHeldItem(handIn);
       return new ActionResult<>(ActionResultType.SUCCESS, itemstack);
     }
@@ -51,11 +50,13 @@ public class ItemGrow extends Item {
       //first get block info
       //if any blocks are in a growable list,
       //show be all biomes for it
-      BlockState block = c.getWorld().getBlockState(c.getPos());
-      List<String> biomes = ModGrowthCtrl.config.getBiomesCombined(block.getBlock());
+      World world = c.getWorld();
+      BlockState block = world.getBlockState(c.getPos());
+      List<String> biomes = ModGrowthCtrl.CONFIG.getBiomesCombined(block.getBlock());
       if (biomes != null && biomes.size() > 0) {
         Biome b = getBiome(c.getWorld(), c.getPos());
-        boolean growHere = UtilString.isInList(biomes, WorldGenRegistries.BIOME.getKey(b));
+        Registry<Biome> biomeReg = world.func_241828_r().getRegistry(Registry.BIOME_KEY);
+        boolean growHere = UtilString.isInList(biomes, biomeReg.getKey(b));
         TextFormatting formatf = (growHere) ? TextFormatting.GREEN : TextFormatting.RED;
         UtilString.chatMessage(c.getPlayer(),
             formatf
@@ -65,17 +66,15 @@ public class ItemGrow extends Item {
       else {
         //
         //else, block is plain, go for the biome lookup
-        Biome biome = getBiome(c.getWorld(), c.getPos());
-        List<String> growths = ModGrowthCtrl.config.getGrowthsForBiome(biome);
-        sendInfoToPlayer(growths, biome);
+        Biome biome = getBiome(world, c.getPos());
+        List<String> growths = ModGrowthCtrl.CONFIG.getGrowthsForBiome(biome);
+        sendInfoToPlayer(c.getPlayer(), growths, biome);
       }
     }
     return super.onItemUse(c);
   }
 
-  private void sendInfoToPlayer(List<String> growths, Biome biome) {
-    PlayerEntity p = Minecraft.getInstance().player;// ModGrowthCtrl.proxy.getClientWorld();
-    //    UtilString.chatMessage(p, );
+  private void sendInfoToPlayer(PlayerEntity p, List<String> growths, Biome biome) {
     List<String> valid = new ArrayList<>();
     for (String g : growths) {
       Block b = ForgeRegistries.BLOCKS.getValue(new ResourceLocation(g));
@@ -89,11 +88,11 @@ public class ItemGrow extends Item {
         valid.add(b.getTranslatedName().getStringTruncated(100));
       }
     }
-    String id = WorldGenRegistries.BIOME.getKey(biome).toString();
-    String name = id;//biome names are illegal thanks mojang
+    Registry<Biome> biomeReg = p.world.func_241828_r().getRegistry(Registry.BIOME_KEY);
+    String id = biomeReg.getKey(biome).toString();
+    String name = id; 
     Collections.sort(valid);
     String bname = (p.isCrouching()) ? id : name;
-    UtilString.chatMessage(p, bname
-        + " : " + String.join(", ", valid));
+    UtilString.chatMessage(p, bname + " : " + String.join(", ", valid));
   }
 }

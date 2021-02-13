@@ -19,4 +19,6 @@ build
 
 # other
 eclipse
+libs
+logs
 run

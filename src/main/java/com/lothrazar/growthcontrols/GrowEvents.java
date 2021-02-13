@@ -1,12 +1,12 @@
 package com.lothrazar.growthcontrols;
 
-import java.util.List;
 import com.lothrazar.growthcontrols.item.ItemGrow;
+import java.util.List;
 import net.minecraft.block.Block;
 import net.minecraft.block.Blocks;
 import net.minecraft.particles.ParticleTypes;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.registry.WorldGenRegistries;
+import net.minecraft.util.registry.Registry;
 import net.minecraft.world.IWorld;
 import net.minecraft.world.World;
 import net.minecraft.world.biome.Biome;
@@ -17,8 +17,6 @@ import net.minecraftforge.eventbus.api.Event;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 
 public class GrowEvents {
-
-  public GrowEvents() {}
 
   @SubscribeEvent
   public void onCropGrowEvent(CropGrowEvent.Pre event) {
@@ -36,24 +34,18 @@ public class GrowEvents {
       }
     }
     Block b = world.getBlockState(pos).getBlock();
-    Biome biome = ItemGrow.getBiome(world, pos);//world.func_225523_d_().func_226836_a_(pos);
-    List<String> allowed = ModGrowthCtrl.config.getBiomesForCrop(b);
+    Biome biome = ItemGrow.getBiome(world, pos);
+    List<String> allowed = ModGrowthCtrl.CONFIG.getBiomesForCrop(b);
     if (allowed == null) {
-      //      ModGrowthCtrl.LOGGER.info("CropGrowEvent ALLOW since all entries null for this crop" + b);
       //nothing listede for this sapling, evertyhings fine stop blocking the event
       return;
     }
-    //    String biomeId = biome.getRegistryName().toString();
-    //because getRegistryName is too fucking easy
-    boolean allowedToGrow = UtilString.isInList(allowed, WorldGenRegistries.BIOME.getKey(biome));
+    Registry<Biome> biomeReg = world.func_241828_r().getRegistry(Registry.BIOME_KEY);
+    boolean allowedToGrow = UtilString.isInList(allowed, biomeReg.getKey(biome));
     if (allowedToGrow == false) {
-      //      ModGrowthCtrl.LOGGER.info("CropGrowEvent DENY " + biome.getRegistryName() + ":" + b);
       event.setResult(Event.Result.DENY);
       this.onGrowCancel(world, pos, biome);
     }
-    //    else {
-    //      ModGrowthCtrl.LOGGER.info("CropGrowEvent ALLOW " + biome.getRegistryName() + ":" + b);
-    //    }
   }
 
   @SubscribeEvent
@@ -62,18 +54,16 @@ public class GrowEvents {
     BlockPos pos = event.getPos();
     Block b = world.getBlockState(pos).getBlock();
     Biome biome = ItemGrow.getBiome(world, pos);
-    //    String biomeId = WorldGenRegistries.field_243657_i.getKey(biome).toString();
-    List<String> allowed = ModGrowthCtrl.config.getBiomesForSapling(b);
+    List<String> allowed = ModGrowthCtrl.CONFIG.getBiomesForSapling(b);
     if (allowed == null) {
       //nothing listede for this sapling, evertyhings fine stop blocking the event
       return;
     }
-    boolean treeAllowedToGrow = UtilString.isInList(allowed, WorldGenRegistries.BIOME.getKey(biome));
-    //    ModGrowthCtrl.LOGGER.info(treeAllowedToGrow + " treeAllowedToGrow  "
-    //        + biomeId + allowed.size());
+    Registry<Biome> biomeReg = world.func_241828_r().getRegistry(Registry.BIOME_KEY);
+    boolean treeAllowedToGrow = UtilString.isInList(allowed, biomeReg.getKey(biome));
     if (treeAllowedToGrow == false) {
       event.setResult(Event.Result.DENY);
-      if (ModGrowthCtrl.config.getdropFailedGrowth()) {
+      if (ModGrowthCtrl.CONFIG.getdropFailedGrowth()) {
         this.onGrowCancel(world, pos, biome);
         //  dropItemStackInWorld((World) world, pos, new ItemStack(b));
       }
@@ -88,21 +78,22 @@ public class GrowEvents {
     Block b = world.getBlockState(pos).getBlock();
     Biome biome = ItemGrow.getBiome(world, pos);
     //only block bonemeal, IF we find the block in here
-    List<String> crops = ModGrowthCtrl.config.getBiomesCombinedAllowNull(b);
+    List<String> crops = ModGrowthCtrl.CONFIG.getBiomesCombinedAllowNull(b);
     if (crops == null) {
       return;
     }
-    boolean allowedCrop = UtilString.isInList(crops, WorldGenRegistries.BIOME.getKey(biome));
+    Registry<Biome> biomeReg = world.func_241828_r().getRegistry(Registry.BIOME_KEY);
+    boolean allowedCrop = UtilString.isInList(crops, biomeReg.getKey(biome));
     if (!allowedCrop) {
       event.setCanceled(true);
       event.setResult(Event.Result.DENY);
-      this.doSmoke(world, pos);//no drops, let it happen naturally
+      this.doSmoke(world, pos);
+      //no drops, let it happen naturally
     }
   }
 
   private void onGrowCancel(IWorld world, BlockPos pos, Biome biome) {
     world.destroyBlock(pos, true);
-    //    ModGrowthCtrl.LOGGER.info("CropGrowEvent DENY " + biome.getRegistryName());
     this.doSmoke(world, pos);
   }
 

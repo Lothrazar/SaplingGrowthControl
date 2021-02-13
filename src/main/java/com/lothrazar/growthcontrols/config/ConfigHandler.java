@@ -1,5 +1,9 @@
 package com.lothrazar.growthcontrols.config;
 
+import com.electronwill.nightconfig.core.file.CommentedFileConfig;
+import com.electronwill.nightconfig.core.io.WritingMode;
+import com.lothrazar.growthcontrols.ModGrowthCtrl;
+import com.lothrazar.growthcontrols.UtilString;
 import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -7,17 +11,10 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
-import com.electronwill.nightconfig.core.file.CommentedFileConfig;
-import com.electronwill.nightconfig.core.io.WritingMode;
-//import com.lothrazar.examplemod.ExampleMod;
-import com.lothrazar.growthcontrols.ModGrowthCtrl;
-import com.lothrazar.growthcontrols.UtilString;
 import net.minecraft.block.Block;
 import net.minecraft.block.Blocks;
-import net.minecraft.client.Minecraft;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.world.biome.Biome;
-import net.minecraft.world.biome.BiomeManager;
 import net.minecraftforge.common.ForgeConfigSpec;
 import net.minecraftforge.registries.ForgeRegistries;
 
@@ -35,13 +32,13 @@ public class ConfigHandler {
 
   private static final ForgeConfigSpec.Builder COMMON_BUILDER = new ForgeConfigSpec.Builder();
   public static final String DELIM = "->";
-  private static ForgeConfigSpec.BooleanValue dropFailedGrowth;
+  private static ForgeConfigSpec.BooleanValue DROPONFAIL;
   public static ForgeConfigSpec.ConfigValue<List<String>> SAPLING_BIOMES;
   public static ForgeConfigSpec.ConfigValue<List<String>> CROP_BIOMES;
   public static ForgeConfigSpec COMMON_CONFIG;
 
   public boolean getdropFailedGrowth() {
-    return dropFailedGrowth.get();
+    return DROPONFAIL.get();
   }
   //  Beets (Beta vulgaris) are a cool-season, root vegetable, which means they grow in the cool weather of spring and fall.
   //EMPTY!!!
@@ -64,20 +61,14 @@ public class ConfigHandler {
     initConfig();
   }
 
-  public void getEmptyBiomes() {
-    PlayerEntity p = Minecraft.getInstance().player;// ModGrowthCtrl.proxy.getClientWorld();
+  public void getEmptyBiomes(PlayerEntity p) {
     List<String> valid = new ArrayList<>();
-    BiomeManager test;
-    //    ForgeRegistries.
     for (Iterator<Biome> iter = ForgeRegistries.BIOMES.iterator(); iter.hasNext();) {
       Biome b = iter.next();
       //find any biomes with NOTHING
       List<String> has = this.getGrowthsForBiome(b);
       if (has == null || has.isEmpty()) {
         valid.add(b.getRegistryName().toString());
-      }
-      else {
-        //        System.out.println(b.getRegistryName() + "  " + has);
       }
     }
     String lst = String.join(", ", valid);
@@ -91,7 +82,7 @@ public class ConfigHandler {
     //TODO: reverse allcapas and finalstatic
     COMMON_BUILDER.comment("General settings").push(ModGrowthCtrl.MODID);
     //
-    dropFailedGrowth = COMMON_BUILDER.comment("Drop sapling item on failed growth").define("dropOnFailedGrow", true);
+    DROPONFAIL = COMMON_BUILDER.comment("Drop sapling item on failed growth").define("dropOnFailedGrow", true);
     //
     List<String> configstuff = new ArrayList<>();
     configstuff.add(Blocks.ACACIA_SAPLING.getRegistryName().toString() + DELIM + String.join(",", new String[] {
@@ -117,7 +108,8 @@ public class ConfigHandler {
     //        "minecraft:*jungle", "minecraft:jungle*", "minecraft:swamp"
     //    }));
     SAPLING_BIOMES = COMMON_BUILDER.comment(
-        "Map growable block to CSV list of biomes no spaces, -> in between.  It SHOULD be fine to add modded saplings. An empty list means the sapling can gro nowhere.  Delete the key-entry for a sapling to let it grow everywhere.")
+        "Map growable block to CSV list of biomes no spaces, -> in between.  It SHOULD be fine to add modded saplings. An empty list means the sapling can gro nowhere.  "
+            + "Delete the key-entry for a sapling to let it grow everywhere.")
         .define("SaplingBlockToBiome", configstuff);
     //end of saplings 
     //NEW SETTING
@@ -134,7 +126,8 @@ public class ConfigHandler {
         "minecraft:giant_tree_taiga_hills", "minecraft:mountain_edge"
     }));
     configstuff.add(Blocks.BEETROOTS.getRegistryName().toString() + DELIM + String.join(",", new String[] {
-        "minecraft:taiga", "minecraft:forest", "minecraft:swamp", "minecraft:flower_forest", "minecraft:birch_forest", "minecraft:birch*", "minecraft:tall_birch_forest", "minecraft:tall_birch_hills",
+        "minecraft:taiga", "minecraft:forest", "minecraft:swamp", "minecraft:flower_forest", "minecraft:birch_forest", "minecraft:birch*",
+        "minecraft:tall_birch_forest", "minecraft:tall_birch_hills",
         "minecraft:dark_forest", "minecraft:dark_forest_hills"
     }));
     final String[] cactua = new String[] {
