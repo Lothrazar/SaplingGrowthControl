@@ -2,21 +2,21 @@ package com.lothrazar.growthcontrols;
 
 import java.util.List;
 import java.util.UUID;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.text.ITextComponent;
-import net.minecraft.util.text.TranslationTextComponent;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.TranslatableComponent;
 
 public class UtilString {
 
-  public static void chatMessage(PlayerEntity player, String message) {
-    if (player.world.isRemote) {
-      player.sendMessage(new TranslationTextComponent(message), UUID.randomUUID());
+  public static void chatMessage(Player player, String message) {
+    if (player.level.isClientSide) {
+      player.sendMessage(new TranslatableComponent(message), UUID.randomUUID());
     }
   }
 
-  public static void chatMessage(PlayerEntity player, ITextComponent displayName) {
-    if (player.world.isRemote) {
+  public static void chatMessage(Player player, Component displayName) {
+    if (player.level.isClientSide) {
       player.sendMessage(displayName, UUID.randomUUID());
     }
   }

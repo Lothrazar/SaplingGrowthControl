@@ -2,7 +2,7 @@ package com.lothrazar.growthcontrols;
 
 import com.lothrazar.growthcontrols.config.ConfigHandler;
 import com.lothrazar.growthcontrols.item.ItemGrow;
-import net.minecraft.item.Item;
+import net.minecraft.world.item.Item;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.RegistryEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;

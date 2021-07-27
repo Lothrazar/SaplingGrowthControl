@@ -11,10 +11,10 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
-import net.minecraft.block.Block;
-import net.minecraft.block.Blocks;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.world.biome.Biome;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.level.biome.Biome;
 import net.minecraftforge.common.ForgeConfigSpec;
 import net.minecraftforge.registries.ForgeRegistries;
 
@@ -61,7 +61,7 @@ public class ConfigHandler {
     initConfig();
   }
 
-  public void getEmptyBiomes(PlayerEntity p) {
+  public void getEmptyBiomes(Player p) {
     List<String> valid = new ArrayList<>();
     for (Iterator<Biome> iter = ForgeRegistries.BIOMES.iterator(); iter.hasNext();) {
       Biome b = iter.next();
