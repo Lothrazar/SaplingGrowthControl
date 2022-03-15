@@ -41,7 +41,7 @@ public class ItemGrow extends Item {
   }
 
   public static Biome getBiome(LevelAccessor world, BlockPos pos) {
-    return world.getBiomeManager().getBiome(pos);
+    return world.getBiomeManager().getBiome(pos).value();
   }
 
   @Override

@@ -31,7 +31,7 @@ public class ConfigHandler {
   }
 
   private static final ForgeConfigSpec.Builder COMMON_BUILDER = new ForgeConfigSpec.Builder();
-  public static final String DELIM = "->";
+  private static final String DELIM = "->";
   private static ForgeConfigSpec.BooleanValue DROPONFAIL;
   public static ForgeConfigSpec.ConfigValue<List<String>> SAPLING_BIOMES;
   public static ForgeConfigSpec.ConfigValue<List<String>> CROP_BIOMES;
