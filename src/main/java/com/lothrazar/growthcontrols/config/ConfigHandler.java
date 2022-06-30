@@ -11,8 +11,10 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import org.jetbrains.annotations.Nullable;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.biome.Biome;
 import net.minecraftforge.common.ForgeConfigSpec;
@@ -68,7 +70,8 @@ public class ConfigHandler {
       //find any biomes with NOTHING
       List<String> has = this.getGrowthsForBiome(b);
       if (has == null || has.isEmpty()) {
-        valid.add(b.getRegistryName().toString());
+        ResourceLocation key = ForgeRegistries.BIOMES.getKey(b);
+        if (key != null) valid.add(key.toString());
       }
     }
     String lst = String.join(", ", valid);
@@ -85,22 +88,22 @@ public class ConfigHandler {
     DROPONFAIL = COMMON_BUILDER.comment("Drop sapling item on failed growth").define("dropOnFailedGrow", true);
     //
     List<String> configstuff = new ArrayList<>();
-    configstuff.add(Blocks.ACACIA_SAPLING.getRegistryName().toString() + DELIM + String.join(",", new String[] {
+    configstuff.add("minecraft:acacia_sapling" + DELIM + String.join(",", new String[] {
         "minecraft:savanna", "minecraft:shattered_savanna", "minecraft:shattered_savanna_plateau", "minecraft:savanna_plateau", "minecraft:modified_wooded_badlands_plateau",
         "minecraft:wooded_badlands_plateau"
     }));
-    configstuff.add(Blocks.BIRCH_SAPLING.getRegistryName().toString() + DELIM + String.join(",", new String[] {
+    configstuff.add("minecraft:birch_sapling" + DELIM + String.join(",", new String[] {
         "minecraft:birch_forest", "minecraft:forest", "minecraft:birch_forest_hills", "minecraft:tall_birch_forest", "minecraft:tall_birch_hills" }));
-    configstuff.add(Blocks.SPRUCE_SAPLING.getRegistryName().toString() + DELIM + String.join(",", new String[] {
+    configstuff.add("minecraft:spruce_sapling"+ DELIM + String.join(",", new String[] {
         "minecraft:taiga", "minecraft:giant_tree_taiga", "minecraft:snowy_tundra", "minecraft:taiga_hills", "minecraft:snowy_taiga", "minecraft:snowy_taiga_hills",
         "minecraft:giant_tree_taiga_hills" }));
-    configstuff.add(Blocks.OAK_SAPLING.getRegistryName().toString() + DELIM + String.join(",", new String[] {
+    configstuff.add("minecraft:oak_sapling"+ DELIM + String.join(",", new String[] {
         "minecraft:forest", "minecraft:dark_forest", "minecraft:wooded_mountains", "minecraft:wooded_hills", "minecraft:swamp", "minecraft:swamp_hills", "minecraft:flower_forest"
     }));
-    configstuff.add(Blocks.DARK_OAK_SAPLING.getRegistryName().toString() + DELIM + String.join(",", new String[] {
+    configstuff.add("minecraft:dark_oak_sapling"+ DELIM + String.join(",", new String[] {
         "minecraft:dark_forest", "minecraft:dark_forest_hills", "minecraft:flower_forest"
     }));
-    configstuff.add(Blocks.JUNGLE_SAPLING.getRegistryName().toString() + DELIM + String.join(",", new String[] {
+    configstuff.add("minecraft:jungle_sapling" + DELIM + String.join(",", new String[] {
         "minecraft:jungle_edge", "minecraft:jungle", "minecraft:jungle_hills", "minecraft:modified_jungle", "minecraft:bamboo_jungle", "minecraft:bamboo_jungle_hills",
         "minecraft:modified_jungle_edge", "minecraft:modified_jungle" }));
     //TODO
